@@ -5,7 +5,7 @@ public class CrazyAnimal extends Animal {
     //TODO tego private finala usunąć może jakoś do animala
 
     public CrazyAnimal(Vector2d position, Integer numberOfGenes, Integer startingEnergy) {
-        super(position, numberOfGenes, startingEnergy);
+        super(position, numberOfGenes, startingEnergy, 1, 1, 1, 1);
         this.numberOfGenes = numberOfGenes;
     }
 

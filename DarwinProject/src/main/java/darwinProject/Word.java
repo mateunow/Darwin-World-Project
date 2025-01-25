@@ -17,8 +17,5 @@ public class Word {
                 Simulation simulation = new Simulation(100, 100, 20, 20, 5, 5, 50, 20, 0, 3, 7, 50);
                 simulation.run();
              System.out.println("System zakończył działanie");
-
-
-
          }
 }

@@ -28,7 +28,7 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private TextField moveListTextField;
     @FXML
-    private Label moveDescriptionLabel;
+    Label moveDescriptionLabel;
 
     private int xMin;
     private int yMin;

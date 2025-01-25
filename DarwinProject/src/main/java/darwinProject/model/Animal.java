@@ -65,16 +65,14 @@ public class Animal implements WorldElement {
 
     public String toString() {
         return switch (this.direction) {
-            //TODO change those directions strings to emojis/something other than NE
-            //TODO add a value of energy
-            case NORTH -> "^";
-            case NORTHEAST -> "NE";
-            case EAST -> ">";
-            case SOUTHEAST -> "SE";
-            case SOUTH -> "v";
-            case SOUTHWEST -> "SW";
-            case WEST -> "<";
-            case NORTHWEST -> "NW";
+            case NORTH -> "⬆️";
+            case NORTHEAST -> "↗️";
+            case EAST -> "➡️";
+            case SOUTHEAST -> "↘️";
+            case SOUTH -> "⬇️";
+            case SOUTHWEST -> "↙️";
+            case WEST -> "⬅️";
+            case NORTHWEST -> "↖️";
         };
     }
 
