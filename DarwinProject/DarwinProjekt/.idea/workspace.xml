@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="68aec91b-df94-4983-9554-5910f70f47f5" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/OptionsParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/OptionsParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/Simulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/Simulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/SimulationApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/SimulationApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/SimulationEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/SimulationEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/Word.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/Word.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/WorldGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/WorldGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/exeptions/IncorrectPositionException.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/exeptions/IncorrectPositionException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/AbstractWorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/AbstractWorldMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/Animal.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/Animal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/ConsoleMapDisplay.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/ConsoleMapDisplay.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/Grass.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/Grass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/GrassField.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/GrassField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/MapChangeListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/MapChangeListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/MapDirection.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/enums/MapDirection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/MoveDirection.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/enums/MoveDirection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/MoveValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/MoveValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/RectangularMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/RectangularMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/Vector2d.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/Vector2d.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/WorldElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/WorldElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/WorldMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/WorldMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/exceptions/IncorrectPositionException.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/exceptions/IncorrectPositionException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/util/Boundary.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/util/Boundary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/util/MapVisualizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/util/MapVisualizer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/model/util/RandomPositionGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/model/util/RandomPositionGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/java/agh/ics/oop/presenter/SimulationPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/java/darwinProject/presenter/SimulationPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main/resources/simulation.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main/resources/simulation.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/agh/ics/oop/OptionsParserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/java/darwinProject/OptionsParserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/agh/ics/oop/SimulationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/java/darwinProject/SimulationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/agh/ics/oop/model/GrassFieldTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/java/darwinProject/model/GrassFieldTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/agh/ics/oop/model/GrassTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/java/darwinProject/model/GrassTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/agh/ics/oop/model/MapDirectionTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/java/darwinProject/model/MapDirectionTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/agh/ics/oop/model/RectangularMapTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/java/darwinProject/model/RectangularMapTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/test/java/agh/ics/oop/model/Vector2dTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../src/test/java/darwinProject/model/Vector2dTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "mateunow"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/mateunow/PO_2024_PT1130_Nowak.git",
+    "accountId": "eea3051a-114e-49ca-8867-18dcef08f7ec"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="2rrEWRSxi41OOFqiWPESWstJgEK" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "lab8",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/mateu/PO/PO_2024_PT1130_Nowak/projekt",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "C:/Users/mateu/PO/PO_2024_PT1130_Nowak/projekt/DarwinProjekt/src/main/java/org/example/Main.java",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="GroovyScriptRunConfiguration" factoryName="Groovy">
+      <setting name="path" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workDir" value="file://$PROJECT_DIR$" />
+      <setting name="debug" value="false" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23339.11" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23339.11" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="68aec91b-df94-4983-9554-5910f70f47f5" name="Changes" comment="" />
+      <created>1737308827195</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1737308827195</updated>
+      <workItem from="1737308828270" duration="34000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/example/Main.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
