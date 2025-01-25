@@ -78,13 +78,13 @@ public class SimulationSettingsWindow {
     // Funkcja uruchamiająca nowe okno z symulacją
     private void startNewSimulationWindow(int mapWidth, int mapHeight, int numAnimals, int numMoves) {
         try {
-//            Stage newStage = new Stage();
-//            newStage.setTitle("Simulation Window");
+            Stage newStage = new Stage();
+            newStage.setTitle("Simulation Window");
 
-//            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("simulation.fxml"));
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("simulation.fxml"));
+
             BorderPane newRoot = loader.load();
+
             SimulationPresenter newPresenter = loader.getController();
 
             // Stwórz mapę i symulację z wprowadzonymi danymi
