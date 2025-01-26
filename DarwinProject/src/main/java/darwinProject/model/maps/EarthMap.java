@@ -104,7 +104,6 @@ public class EarthMap extends AbstractWorldMap {
         return fieldsWithoutGrassSet;
     }
 
-
     @Override
     public List<WorldElement> getElements(){
         List<WorldElement> worldElements = super.getElements();

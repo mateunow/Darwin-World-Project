@@ -22,6 +22,7 @@
 }
 
 .label {
+    -fx-font-family: "Segoe UI Emoji";  /* Wspiera emoji na Windowsie */
     -fx-font-size: 16px;
     -fx-text-fill: #000000;
     -fx-alignment: center-left; /* Wyrównanie tekstu do lewej strony */

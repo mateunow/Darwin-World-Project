@@ -75,4 +75,8 @@ public class Simulation implements Runnable
     public List<Animal> getAnimals() {
         return List.copyOf(animals);
     }
+
+    public void kill(Animal animal) {
+            animals.remove(animal); // Usuwamy zwierzę z listy zwierząt
+    }
 }
