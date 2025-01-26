@@ -4,11 +4,12 @@ import darwinProject.enums.MapDirection;
 import darwinProject.model.maps.WorldMap;
 import darwinProject.model.util.Boundary;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 
-public class Animal implements WorldElement {
+public class Animal implements Comparable<Animal>, WorldElement {
     protected MapDirection direction;
     private Vector2d position;
     private int energy;
@@ -27,6 +28,7 @@ public class Animal implements WorldElement {
     private final Integer energyToReproduce;
     private final Integer minNumberOfMutations;
     private final Integer maxNumberOfMutations;
+    protected final int numberOfGenes;
 
 
     public Animal(Vector2d position, Integer numberOfGenes, Integer startingEnergy, Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations){
@@ -38,6 +40,7 @@ public class Animal implements WorldElement {
             genome.add(rand.nextInt(maxGene + 1));
         }
         this.currentGene = rand.nextInt(numberOfGenes);
+        this.numberOfGenes = numberOfGenes;
         this.direction = MapDirection.values()[rand.nextInt(MapDirection.values().length)];
         this.firstParent = null;
         this.secondParent = null;
@@ -52,6 +55,7 @@ public class Animal implements WorldElement {
         this.position = position;
         this.energy = energy;
         this.genome = genome;
+        this.numberOfGenes = genome.size();
         this.currentGene = rand.nextInt(genome.size());
         this.firstParent = firstParent;
         this.secondParent = secondParent;
@@ -61,6 +65,28 @@ public class Animal implements WorldElement {
         this.minNumberOfMutations = minNumberOfMutations;
         this.maxNumberOfMutations = maxNumberOfMutations;
     }
+
+    @Override
+    public int compareTo(Animal other) {
+        // First compare by energy (descending order)
+        if (this.energy != other.energy) {
+            return Integer.compare(other.energy, this.energy);  // descending order of energy
+        }
+
+        // If energies are equal, compare by age (descending order)
+        if (this.daysLived != other.daysLived) {
+            return Integer.compare(other.daysLived, this.daysLived);  // descending order of age
+        }
+
+        // If both energy and age are the same, compare by children count (descending order)
+        if (this.childrenCount != other.childrenCount) {
+            return Integer.compare(other.childrenCount, this.childrenCount);  // descending order of children count
+        }
+
+        // If all the above attributes are the same, return 0 (no order change)
+        return 0;
+    }
+
 
 
     public String toString() {
@@ -80,6 +106,10 @@ public class Animal implements WorldElement {
 
 
     public void move(WorldMap map) {
+        this.energy -= 20;
+        if (isDead()) {
+            this.die();
+        }
         Vector2d potentialNewPosition = this.position.add(this.getDirection().toUnitVector());
 
         Boundary boundary = map.getCurrentBounds();
@@ -144,7 +174,7 @@ public class Animal implements WorldElement {
 
         // Apply mutations to some genes in the new genome
         int genomeSize = newGenome.size();
-        int numMutations = rand.nextInt(genomeSize + 1);
+        int numMutations = rand.nextInt(maxNumberOfMutations-minNumberOfMutations) + minNumberOfMutations;
         for (int i = 0; i < numMutations; i++) {
             int geneIndex = rand.nextInt(genomeSize);
             int newGeneValue = rand.nextInt(maxGene + 1);
@@ -178,6 +208,11 @@ public class Animal implements WorldElement {
     public void die() {
         this.dayOfDeath = this.daysLived;
     }
+    public boolean isDead() {
+        return (this.energy <= 0);
+    }
+    public boolean canReproduce() {
+        return energy > energyReadyToReproduce;  }
 
     public final List<Integer> getGenome() {
         return new ArrayList<>(this.genome);
@@ -190,5 +225,12 @@ public class Animal implements WorldElement {
     }
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
+    }
+    public int getAge(){
+        return this.daysLived;
+    }
+    @Override
+    public int hashCode() {
+        return (31 * getEnergy() * getAge());
     }
 }

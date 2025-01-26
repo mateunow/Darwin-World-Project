@@ -12,67 +12,54 @@ import java.util.Random;
 
 public class Simulation implements Runnable
 {
-    private final List<Animal> animals;
-    private final List<Vector2d> animalsPositions;
     private final AbstractWorldMap world;
-    private Random random = new Random();
-    private final Integer initialNumberOfAnimals;
+    private final Random random = new Random();
+
 
 
     public Simulation(Integer mapHeight, Integer mapWidth, Integer startingGrassCount,
                       Integer energyFromEatingPlants, Integer numberOfPlantsGrownDaily, Integer initialNumberOfAnimals,
-            Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations, Integer numberOfGenes, Integer startingEnergy) {
+                      Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations, Integer numberOfGenes, Integer startingEnergy) {
         //TODO add number of grasses to add each day
         //TODO add animal variant (crazy/normal animal)
         this.world = new EarthMap(mapHeight, mapWidth, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
-        this.animals = new ArrayList<>();
-        this.animalsPositions = new ArrayList<>();
-        this.initialNumberOfAnimals = initialNumberOfAnimals;
 
         for (int i=0; i<initialNumberOfAnimals; i++) {
             try {
                 Vector2d position = new Vector2d(random.nextInt(mapWidth), random.nextInt(mapHeight));
                 Animal animal = new Animal(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
                 world.place(animal);
-                this.animals.add(animal);
-                this.animalsPositions.add(position);
             }
             catch (IncorrectPositionException e) {
                 System.out.println("Incorrect position " + e.getMessage());
             }
         }
 
-}
+    }
 
     public void run(){
 
-        int animalsCount = initialNumberOfAnimals;
         boolean running = true;
+        int i = 0;
         while (running) {
-
-            for (int i = 0; i < animalsCount; i++) {
-                //TODO zmień warunek zakończenia tej pętli i thread do move animala
-                world.move(animals.get(i));
-            for (Vector2d position : animalsPositions) {
-
-                //TODO eat
-            }
-            for (Animal animal: animals) {
-            }
+            System.out.println("day " + i);
+            i++;
+//TODO dodaj warunek zakończenia pętli
+//
+            world.handleMovement();
+            world.eatPlants();
+            world.handlePlantConsumption();
+            world.handleReproduction();
             world.generateNewGrassPositions();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            System.out.println(world);
+//            try {
+//                Thread.sleep(2000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 
 
-            }
-            System.out.println(world);
         }
     }
-
-    public List<Animal> getAnimals() {
-        return List.copyOf(animals);
-    }
 }
+
