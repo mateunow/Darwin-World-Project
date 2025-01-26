@@ -1,10 +1,17 @@
 package darwinProject.model;
 
+import darwinProject.enums.MapDirection;
+
+import java.util.ArrayList;
+
 public class CrazyAnimal extends Animal {
     //TODO tego private finala usunąć może jakoś do animala
 
-    public CrazyAnimal(Vector2d position, Integer numberOfGenes, Integer startingEnergy) {
-        super(position, numberOfGenes, startingEnergy, 1, 1, 1, 1);
+    public CrazyAnimal(Vector2d position, Integer numberOfGenes, Integer startingEnergy, Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations) {
+        super(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
+    }
+    public CrazyAnimal(Vector2d position, ArrayList<Integer> genome,  Integer energy, Animal firstParent, Animal secondParent, Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations){
+        super(position, genome,  energy, firstParent, secondParent, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
     }
 
     @Override
@@ -19,5 +26,15 @@ public class CrazyAnimal extends Animal {
         }
         currentGene %= maxGene;
     }
+    @Override
+    public Animal reproduceWithOtherAnimal(Animal animal) {
+        ArrayList<Integer> childGenome = createChildGenome(this, animal);
+        this.childrenCount++;
+        this.energy -= energyToReproduce;
+        animal.childrenCount++;
+        animal.energy -= energyToReproduce;
+        return new CrazyAnimal(this.getPosition(), childGenome, 2 * energyToReproduce, this, animal, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
+    }
+
 }
 

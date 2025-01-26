@@ -85,18 +85,26 @@ public abstract class AbstractWorldMap implements WorldMap {
     public void handlePlantConsumption() {
         Map<Vector2d, List<Animal>> groupedAnimals = groupAnimalsByPosition();
 
-        for (Map.Entry<Vector2d, Grass> entry : grassMap.entrySet()) {
-            Vector2d position = entry.getKey();
-            Grass grass = entry.getValue();
+        if (!grassMap.isEmpty()) {
+            List<Vector2d> positionsToRemove = new ArrayList<>();
 
-            List<Animal> animalsAtPosition = groupedAnimals.get(position);
-            if (animalsAtPosition != null && !animalsAtPosition.isEmpty()) {
-                Animal strongestAnimal = getStrongestAnimal(animalsAtPosition);
-                strongestAnimal.addEnergy(energyFromEatingPlant);
+            for (Map.Entry<Vector2d, Grass> entry : grassMap.entrySet()) {
+                Vector2d position = entry.getKey();
+                List<Animal> animalsAtPosition = groupedAnimals.get(position);
+
+                if (animalsAtPosition != null && !animalsAtPosition.isEmpty()) {
+                    Animal strongestAnimal = getStrongestAnimal(animalsAtPosition);
+                    strongestAnimal.addEnergy(energyFromEatingPlant);
+                    positionsToRemove.add(position);
+                }
+            }
+
+            for (Vector2d position : positionsToRemove) {
                 grassMap.remove(position);
             }
         }
     }
+
 
     public void handleReproduction() {
         Map<Vector2d, List<Animal>> groupedAnimals = groupAnimalsByPosition();
@@ -113,8 +121,12 @@ public abstract class AbstractWorldMap implements WorldMap {
 
                     if (parent1.canReproduce() && parent2.canReproduce()) {
                         Animal child = parent1.reproduceWithOtherAnimal(parent2);
-                        placeAnimal(child, entry.getKey());
-                        System.out.println("ADDED ANIMAL" + child);
+                        try {
+                            placeAnimal(child, entry.getKey());
+                        }
+                        catch (Exception e) {
+                            System.out.println("Nie udało się postawić zwierzęcia" + e.getMessage());
+                        }
                     }
                 }
             }
@@ -136,9 +148,24 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public abstract void move(Animal animal) ;
-    protected abstract Animal getStrongestAnimal(List<Animal> animals);
 
-    protected abstract void placeAnimal(Animal animal, Vector2d position);
+    protected Animal getStrongestAnimal(List<Animal> animals) {
+        if (animals == null || animals.isEmpty()) {
+            throw new IllegalStateException("No animals at position");
+        }
+        return animals.stream().min(new AnimalPriorityComparator())
+                .orElseThrow(() -> new IllegalStateException("No animals at position"));
+    }
+
+    protected void placeAnimal(Animal animal, Vector2d position) throws IncorrectPositionException {
+        if (canMoveTo(position)) {
+            animals.computeIfAbsent(position, k -> new TreeSet<>()).add(animal);
+            livingAnimals.add(animal);
+        }
+        else {
+            throw new IncorrectPositionException(position);
+        }
+    }
 
 
     @Override
@@ -152,7 +179,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     public void place(Animal animal) throws IncorrectPositionException {
         Vector2d position = animal.getPosition();
         if (canMoveTo(position)) {
-            // Use computeIfAbsent to get or create a SortedSet for the position
             animals.computeIfAbsent(position, k -> new TreeSet<>(new AnimalPriorityComparator())).add(animal);
             livingAnimals.add(animal);
             notifyObservers("Animal placed at " + animal.getPosition());

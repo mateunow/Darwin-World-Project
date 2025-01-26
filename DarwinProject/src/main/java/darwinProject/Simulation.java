@@ -1,34 +1,47 @@
 package darwinProject;
 
+import darwinProject.enums.AnimalTypes;
+import darwinProject.enums.MapType;
+import darwinProject.model.CrazyAnimal;
+import darwinProject.model.Water;
 import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
 import darwinProject.model.Vector2d;
 import darwinProject.exceptions.IncorrectPositionException;
 import darwinProject.model.maps.EarthMap;
+import darwinProject.model.maps.WaterMap;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Simulation implements Runnable
 {
     private final AbstractWorldMap world;
-    private final Random random = new Random();
-
 
 
     public Simulation(Integer mapHeight, Integer mapWidth, Integer startingGrassCount,
                       Integer energyFromEatingPlants, Integer numberOfPlantsGrownDaily, Integer initialNumberOfAnimals,
-                      Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations, Integer numberOfGenes, Integer startingEnergy) {
-        //TODO add number of grasses to add each day
-        //TODO add animal variant (crazy/normal animal)
-        this.world = new EarthMap(mapHeight, mapWidth, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
+                      Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations, Integer numberOfGenes, Integer startingEnergy, AnimalTypes type, MapType mapType) {
+
+        //TODO ADD MAP TYPE
+        if (mapType == MapType.EarthMap) {
+            this.world = new EarthMap(mapHeight, mapWidth, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
+        }
+        else {
+            this.world = new WaterMap(mapHeight, mapWidth, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
+        }
+        Random random = new Random();
 
         for (int i=0; i<initialNumberOfAnimals; i++) {
             try {
+
                 Vector2d position = new Vector2d(random.nextInt(mapWidth), random.nextInt(mapHeight));
-                Animal animal = new Animal(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
-                world.place(animal);
+                if (type == AnimalTypes.CrazyAnimal) {
+                    CrazyAnimal animal = new CrazyAnimal(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
+                    world.place(animal);
+                } else {
+                    Animal animal = new Animal(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
+                    world.place(animal);
+                }
             }
             catch (IncorrectPositionException e) {
                 System.out.println("Incorrect position " + e.getMessage());
@@ -51,12 +64,12 @@ public class Simulation implements Runnable
             world.handlePlantConsumption();
             world.handleReproduction();
             world.generateNewGrassPositions();
-            System.out.println(world);
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            System.out.println(world);
+//            try {
+//                Thread.sleep(2000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 
 
         }

@@ -1,6 +1,8 @@
 package darwinProject.presenter;
 
 import darwinProject.Simulation;
+import darwinProject.enums.AnimalTypes;
+import darwinProject.enums.MapType;
 import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.maps.EarthMap;
 import javafx.fxml.FXML;
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.List;
 
 public class SimulationSettingsWindow {
+
     @FXML
     private Label moveDescriptionLabel;
     @FXML
@@ -61,25 +64,27 @@ public class SimulationSettingsWindow {
     @FXML
     private TextField numberOfGenesField;
     @FXML
-    private Label errorMessageLabel;
-    @FXML
     private Button startButton;
+    @FXML
+    private Label errorMessageLabel;
 
-
-    // Metoda do inicjalizacji formularza
+    // Method to initialize the form
     @FXML
     public void initialize() {
-        errorMessageLabel.setText(""); // Ukrycie błędów na początku
+        errorMessageLabel.setText(""); // Hide errors initially
     }
 
-    // Metoda do uruchomienia symulacji na podstawie wprowadzonych danych
+    // Method to start the simulation based on user input
     @FXML
     private void onStartSimulation() {
         try {
+            // Get values from all the fields
             int mapWidth = Integer.parseInt(mapWidthField.getText());
             int mapHeight = Integer.parseInt(mapHeightField.getText());
             int numAnimals = Integer.parseInt(numAnimalsField.getText());
             int numMoves = Integer.parseInt(numMovesField.getText());
+
+            // New parameters related to plants and animals
             int startingGrassCount = Integer.parseInt(startingGrassCountField.getText());
             int energyFromEatingPlants = Integer.parseInt(energyFromEatingPlantsField.getText());
             int numberOfPlantsGrownDaily = Integer.parseInt(numberOfPlantsGrownDailyField.getText());
@@ -90,54 +95,58 @@ public class SimulationSettingsWindow {
             int maxNumberOfMutations = Integer.parseInt(maxNumberOfMutationsField.getText());
             int numberOfGenes = Integer.parseInt(numberOfGenesField.getText());
 
-            // Check if the data is valid
-            if (mapWidth <= 0 || mapHeight <= 0 || numAnimals <= 0 || numMoves <= 0 || startingGrassCount <= 0 || energyFromEatingPlants <= 0 || numberOfGenes <= 0
-            || numberOfPlantsGrownDaily <= 0 || startingEnergy <= 0 || energyReadyToReproduce <= 0 || minNumberOfMutations <= 0 || maxNumberOfMutations <= 0 || energyToReproduce <= 0) {
-                throw new NumberFormatException("Wszystkie dane muszą być dodatnie!");
+            // Check that values are within valid ranges
+            if (mapWidth < 1 || mapWidth > 10001 || mapHeight < 1 || mapHeight > 10001 ||
+                    numAnimals < 1 || numAnimals > 10001 || numMoves < 1 || numMoves > 10001 ||
+                    startingGrassCount < 1 || startingGrassCount > 10001 || energyFromEatingPlants < 1 || energyFromEatingPlants > 10001 ||
+                    numberOfPlantsGrownDaily < 1 || numberOfPlantsGrownDaily > 10001 || startingEnergy < 1 || startingEnergy > 10001 ||
+                    energyReadyToReproduce < 1 || energyReadyToReproduce > 10001 || energyToReproduce < 1 || energyToReproduce > 10001 ||
+                    minNumberOfMutations < 0 || minNumberOfMutations > 10001 || maxNumberOfMutations < 0 || maxNumberOfMutations > 10001 ||
+                    numberOfGenes < 1 || numberOfGenes > 10001) {
+                errorMessageLabel.setText("Błąd: Wszystkie dane muszą być liczbami od 1 do 10001!");
+                return;
             }
 
-            // Start the simulation with the gathered parameters
-            startNewSimulationWindow(mapWidth, mapHeight, startingGrassCount, energyFromEatingPlants,
-                    numberOfPlantsGrownDaily, numAnimals, energyReadyToReproduce, energyToReproduce,
-                    minNumberOfMutations, maxNumberOfMutations, numberOfGenes, startingEnergy, numMoves);
+            // Start a new simulation window
+            startNewSimulationWindow(mapWidth, mapHeight, numAnimals, numMoves, startingGrassCount, energyFromEatingPlants,
+                    numberOfPlantsGrownDaily, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations,
+                    maxNumberOfMutations, numberOfGenes);
 
         } catch (NumberFormatException e) {
-            errorMessageLabel.setText("Błąd: " + e.getMessage());
+            errorMessageLabel.setText("Błąd: Proszę wprowadzić poprawne liczby!");
         }
     }
 
-
-    // Funkcja uruchamiająca nowe okno z symulacją
-    private void startNewSimulationWindow(int mapWidth, int mapHeight, int startingGrassCount, int energyFromEatingPlants,
-                                          int numberOfPlantsGrownDaily, int numAnimals, int energyReadyToReproduce,
-                                          int energyToReproduce, int minNumberOfMutations, int maxNumberOfMutations,
-                                          int numberOfGenes, int startingEnergy, int numMoves) {
+    // Create a new simulation window with the given parameters
+    private void startNewSimulationWindow(int mapWidth, int mapHeight, int numAnimals, int numMoves,
+                                          int startingGrassCount, int energyFromEatingPlants, int numberOfPlantsGrownDaily,
+                                          int startingEnergy, int energyReadyToReproduce, int energyToReproduce,
+                                          int minNumberOfMutations, int maxNumberOfMutations, int numberOfGenes) {
         try {
             Stage newStage = new Stage();
             newStage.setTitle("Simulation Window");
 
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("simulation.fxml"));
             BorderPane newRoot = loader.load();
+
             SimulationPresenter newPresenter = loader.getController();
 
-            // Create map and simulation with new parameters
-            AbstractWorldMap map = new EarthMap(mapWidth, mapHeight, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
-            map.registerObservers(newPresenter);
-            newPresenter.setWorldMap(map);
+            // Pass the parameters to the Simulation class
+            Simulation simulation = new Simulation(
+                    mapHeight, mapWidth, startingGrassCount, energyFromEatingPlants, numberOfPlantsGrownDaily,
+                    numAnimals, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations,
+                    numberOfGenes, startingEnergy, AnimalTypes.Animal, MapType.EarthMap); //TODO REPLACE THIS WITH CRAZY ANIMAL OPTION
 
-            Simulation simulation = new Simulation(mapWidth, mapHeight, startingGrassCount, energyFromEatingPlants,
-                    numberOfPlantsGrownDaily, numAnimals, energyReadyToReproduce, energyToReproduce,
-                    minNumberOfMutations, maxNumberOfMutations, numberOfGenes, startingEnergy);
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
 
-            newPresenter.moveDescriptionLabel.setText("Symulacja rozpoczęta z parametrami: " + numMoves + " moves.");
+            newPresenter.moveDescriptionLabel.setText("Simulation started!");
 
             new Thread(engine::runSync).start();
 
             Scene scene = new Scene(newRoot);
             newStage.setScene(scene);
             newStage.show();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

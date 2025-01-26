@@ -1,42 +1,49 @@
 package darwinProject.model.maps;
 
 import darwinProject.enums.MapDirection;
-import darwinProject.model.Vector2d;
+import darwinProject.model.*;
 import darwinProject.model.util.AnimalPriorityComparator;
 import darwinProject.model.util.RandomPositionGenerator;
-import darwinProject.model.Water;
-import darwinProject.model.Animal;
-import darwinProject.model.Grass;
-import darwinProject.model.WorldElement;
 
 import java.util.*;
 
-public class WaterMap extends EarthMap {
+public class WaterMap extends AbstractWorldMap {
     private final Map<Vector2d, Water> waterMap = new HashMap<>();
     private final int numberOfWaterTiles;
-    private  Map<Vector2d, Grass> grassMap = new HashMap<>();
+    private final int width;
+    private final int height;
+    private Random random = new Random();
 
-    public WaterMap(int height, int width, int startGrassCount, int numberOfPlantsGrownDaily, int energyFromEatingPlant, int numberOfWaterTiles) {
+
+    public WaterMap(int height, int width, int startGrassCount, int numberOfPlantsGrownDaily, int energyFromEatingPlant) {
         super(height, width, startGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlant);
-        this.numberOfWaterTiles = numberOfWaterTiles;
+        Random random = new Random();
+        this.width = width;
+        this.height = height;
+        //TODO CHECK IF NOT -1
+        this.numberOfWaterTiles = random.nextInt(height*width);
         generateWaterTiles();
+
     }
 
     // Generowanie losowych pól z wodą
     private void generateWaterTiles() {
-        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(getWidth(), getHeight(), numberOfWaterTiles);
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(width, height, numberOfWaterTiles);
         for (Vector2d waterPosition : randomPositionGenerator) {
             waterMap.put(waterPosition, new Water(waterPosition));
+        }
+    }
+    @Override
+    public void generateNewGrassPositions() {
+        super.generateNewGrassPositions();
+        if (random.nextBoolean()) {
+
         }
     }
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        // Sprawdzenie, czy pole zawiera wodę
-        if (waterMap.containsKey(position)) {
-            return false; // Zwierzę nie może wejść na wodę
-        }
-        return super.canMoveTo(position);
+        return !waterMap.containsKey(position) || position.precedes(upperRight) || position.follows(lowerLeft);
     }
 
     @Override
@@ -77,7 +84,6 @@ public class WaterMap extends EarthMap {
 
     @Override
     public WorldElement objectAt(Vector2d position) {
-        // Jeżeli na polu znajduje się woda, zwróć obiekt wody
         WorldElement waterElement = waterMap.get(position);
         if (waterElement != null) {
             return waterElement;
@@ -96,13 +102,6 @@ public class WaterMap extends EarthMap {
         return waterMap;
     }
 
-    public int getWidth() {
-        return getCurrentBounds().upperRight().getX() + 1;
-    }
-
-    public int getHeight() {
-        return getCurrentBounds().upperRight().getY() + 1;
-    }
 
     public void spreadWater(Vector2d waterPosition) {
         // Sprawdzanie kierunków: góra, dół, lewo, prawo
