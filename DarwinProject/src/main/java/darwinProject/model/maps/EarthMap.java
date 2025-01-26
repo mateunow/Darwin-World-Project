@@ -67,12 +67,12 @@ public class EarthMap extends AbstractWorldMap {
         }
         return grassMap.get(position);
     }
+
     @Override
     protected void placeAnimal(Animal animal, Vector2d position) {
         animals.computeIfAbsent(position, k -> new TreeSet<>()).add(animal);  // Ensure SortedSet is used
         livingAnimals.add(animal);
     }
-
 
     @Override
     public List<WorldElement> getElements() {
@@ -89,6 +89,3 @@ public class EarthMap extends AbstractWorldMap {
                 .max(Comparator.comparingInt(Animal::getEnergy))
                 .orElseThrow(() -> new IllegalStateException("No animals at position"));
     }
-
-
-}

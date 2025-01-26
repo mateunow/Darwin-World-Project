@@ -13,10 +13,23 @@ repositories {
         modules = ['javafx.base', 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media', 'javafx.swing', 'javafx.web']
     }
 }
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation "org.openjfx:javafx-base:17"
+    implementation "org.openjfx:javafx-controls:17"
+    implementation "org.openjfx:javafx-fxml:17"
+    implementation "org.openjfx:javafx-graphics:17"
+    implementation "org.openjfx:javafx-media:17"
+    implementation "org.openjfx:javafx-swing:17"
+    implementation "org.openjfx:javafx-web:17"
 }
 
 test {

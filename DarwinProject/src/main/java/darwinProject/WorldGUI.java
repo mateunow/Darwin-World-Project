@@ -1,6 +1,7 @@
 package darwinProject;
 
 import darwinProject.presenter.SimulationApp;
+import darwinProject.presenter.SimulationSettingsApp;
 import javafx.application.Application;
 
 public class WorldGUI {
@@ -13,3 +14,9 @@ public class WorldGUI {
         }
     }
 }
+
+
+//    public static void main(String[] args) {
+//        Application.launch(SimulationSettingsApp.class, args);  // Uruchomienie aplikacji z oknem formularza
+//    }
+//}

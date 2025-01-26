@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Pos?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="darwinProject.presenter.SimulationSettingsWindow">
+    <VBox alignment="CENTER" spacing="10">
+        <Label text="Ustawienia Symulacji" style="-fx-font-size: 18px;"/>
+
+        <HBox spacing="10">
+            <Label text="Szerokość mapy:"/>
+            <TextField fx:id="mapWidthField" promptText="Wprowadź szerokość mapy"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Wysokość mapy:"/>
+            <TextField fx:id="mapHeightField" promptText="Wprowadź wysokość mapy"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Liczba zwierząt:"/>
+            <TextField fx:id="numAnimalsField" promptText="Wprowadź liczbę zwierząt"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Liczba kroków:"/>
+            <TextField fx:id="numMovesField" promptText="Wprowadź liczbę kroków"/>
+        </HBox>
+
+        <Label fx:id="errorMessageLabel" style="-fx-text-fill: red;"/>
+
+        <Button text="Rozpocznij Symulację" onAction="#onStartSimulation" style="-fx-font-size: 14px;"/>
+    </VBox>
+</AnchorPane>

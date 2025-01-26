@@ -15,7 +15,7 @@ public class Animal implements Comparable<Animal>, WorldElement {
     private int energy;
     protected final int maxGene = 7;
     private final ArrayList<Integer> genome;
-    protected int currentGene;
+    public int currentGene;
     private int daysLived = 0;
     private int plantsEaten;
     private int dayOfDeath;
@@ -91,16 +91,14 @@ public class Animal implements Comparable<Animal>, WorldElement {
 
     public String toString() {
         return switch (this.direction) {
-            //TODO change those directions strings to emojis/something other than NE
-            //TODO add a value of energy
-            case NORTH -> "^";
-            case NORTHEAST -> "NE";
-            case EAST -> ">";
-            case SOUTHEAST -> "SE";
-            case SOUTH -> "v";
-            case SOUTHWEST -> "SW";
-            case WEST -> "<";
-            case NORTHWEST -> "NW";
+            case NORTH -> "↑";        // Zwróć strzałkę w górę (Unicode: \u2191)
+            case NORTHEAST -> "↗";    // Zwróć strzałkę w górny-prawy róg (Unicode: \u2197)
+            case EAST -> "→";         // Zwróć strzałkę w prawo (Unicode: \u2192)
+            case SOUTHEAST -> "↘";    // Zwróć strzałkę w dolny-prawy róg (Unicode: \u2198)
+            case SOUTH -> "↓";        // Zwróć strzałkę w dół (Unicode: \u2193)
+            case SOUTHWEST -> "↙";    // Zwróć strzałkę w dolny-lewy róg (Unicode: \u2199)
+            case WEST -> "←";         // Zwróć strzałkę w lewo (Unicode: \u2190)
+            case NORTHWEST -> "↖";    // Zwróć strzałkę w górny-lewy róg (Unicode: \u2196)
         };
     }
 
@@ -226,6 +224,16 @@ public class Animal implements Comparable<Animal>, WorldElement {
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
     }
+
+
+    public int getDaysLived() {
+        return this.daysLived;
+    }
+
+    public int getPlantsEaten(){
+        return this.plantsEaten;
+    }
+
     public int getAge(){
         return this.daysLived;
     }
@@ -234,3 +242,4 @@ public class Animal implements Comparable<Animal>, WorldElement {
         return (31 * getEnergy() * getAge());
     }
 }
+
