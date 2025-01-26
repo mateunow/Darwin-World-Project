@@ -7,6 +7,7 @@
     <VBox alignment="CENTER" spacing="10">
         <Label text="Ustawienia Symulacji" style="-fx-font-size: 18px;"/>
 
+        <!-- Existing Fields -->
         <HBox spacing="10">
             <Label text="Szerokość mapy:"/>
             <TextField fx:id="mapWidthField" promptText="Wprowadź szerokość mapy"/>
@@ -25,6 +26,52 @@
         <HBox spacing="10">
             <Label text="Liczba kroków:"/>
             <TextField fx:id="numMovesField" promptText="Wprowadź liczbę kroków"/>
+        </HBox>
+
+        <!-- New Fields for Plant and Animal Parameters -->
+        <HBox spacing="10">
+            <Label text="Startowa liczba roślin:"/>
+            <TextField fx:id="startingGrassCountField" promptText="Wprowadź liczbę roślin"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Energia z roślin:"/>
+            <TextField fx:id="energyFromEatingPlantsField" promptText="Energia z jednej rośliny"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Liczba roślin na dzień:"/>
+            <TextField fx:id="numberOfPlantsGrownDailyField" promptText="Wprowadź liczbę roślin na dzień"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Energia zwierzęcia (startowa):"/>
+            <TextField fx:id="startingEnergyField" promptText="Wprowadź startową energię"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Energia potrzebna do rozmnożenia:"/>
+            <TextField fx:id="energyReadyToReproduceField" promptText="Energia potrzebna do rozmnożenia"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Energia na rozmnożenie:"/>
+            <TextField fx:id="energyToReproduceField" promptText="Energia zużywana do rozmnożenia"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Minimalna liczba mutacji:"/>
+            <TextField fx:id="minNumberOfMutationsField" promptText="Minimalna liczba mutacji"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Maksymalna liczba mutacji:"/>
+            <TextField fx:id="maxNumberOfMutationsField" promptText="Maksymalna liczba mutacji"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Długość genomu:"/>
+            <TextField fx:id="numberOfGenesField" promptText="Wprowadź długość genomu"/>
         </HBox>
 
         <Label fx:id="errorMessageLabel" style="-fx-text-fill: red;"/>

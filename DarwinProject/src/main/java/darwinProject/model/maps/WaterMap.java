@@ -2,20 +2,14 @@ package darwinProject.model.maps;
 
 import darwinProject.enums.MapDirection;
 import darwinProject.model.Vector2d;
+import darwinProject.model.util.AnimalPriorityComparator;
 import darwinProject.model.util.RandomPositionGenerator;
 import darwinProject.model.Water;
 import darwinProject.model.Animal;
 import darwinProject.model.Grass;
 import darwinProject.model.WorldElement;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Collections;
+import java.util.*;
 
 public class WaterMap extends EarthMap {
     private final Map<Vector2d, Water> waterMap = new HashMap<>();
@@ -70,7 +64,8 @@ public class WaterMap extends EarthMap {
         }
 
         animals.remove(currentPosition);
-        animals.put(animalNewPosition, animal);
+        animals.computeIfAbsent(currentPosition, k -> new TreeSet<>(new AnimalPriorityComparator())).add(animal);
+
 
         if (!animal.getPosition().equals(currentPosition)) {
             notifyObservers("Animal moved from " + currentPosition + " to " + animal.getPosition());
@@ -132,7 +127,12 @@ public class WaterMap extends EarthMap {
                 if (animals.containsKey(newPosition)) {
                     animals.remove(newPosition); // Usuwamy zwierze
                     // TODO co z tym kill?
-                    animals.get(newPosition).die();  // Ustalamy datę śmierci
+                    SortedSet<Animal> animalsToDelete = animals.get(newPosition);  // Ustalamy datę śmierci
+                    for (Animal animal : animalsToDelete) {
+                        animal.die();
+                        animals.remove(animal);
+                        deadAnimals.add(animal);
+                    }
                     notifyObservers("Animal died due to water at " + newPosition);
                 }
 

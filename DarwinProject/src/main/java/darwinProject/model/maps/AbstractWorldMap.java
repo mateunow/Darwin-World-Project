@@ -68,19 +68,16 @@ public abstract class AbstractWorldMap implements WorldMap {
             if (animal.isDead()) {
                 deadAnimals.add(animal);
                 deadAnimalsToRemove.add(animal);
-                System.out.println("DEAD ANIMAL" + animal);
                 Vector2d position = animal.getPosition();
                 SortedSet<Animal> animalsAtPosition = animals.get(position);
                 if (animalsAtPosition != null) {
                     animalsAtPosition.remove(animal);
                     if (animalsAtPosition.isEmpty()) {
                         animals.remove(position);
-
                     }
                 }
             }
         }
-
         livingAnimals.removeAll(deadAnimalsToRemove);
     }
 
@@ -117,7 +114,7 @@ public abstract class AbstractWorldMap implements WorldMap {
                     if (parent1.canReproduce() && parent2.canReproduce()) {
                         Animal child = parent1.reproduceWithOtherAnimal(parent2);
                         placeAnimal(child, entry.getKey());
-                        livingAnimals.add(child);
+                        System.out.println("ADDED ANIMAL" + child);
                     }
                 }
             }
@@ -192,8 +189,8 @@ public abstract class AbstractWorldMap implements WorldMap {
         int height = boundary.upperRight().getX();
 
         Set<Vector2d> fieldsWithoutGrassSet = new HashSet<>();
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i <= width; i++) {
+            for (int j = 0; j <= height; j++) {
                 Vector2d field = new Vector2d(i, j);
                 if (!grassMap.containsKey(field)) {
                     fieldsWithoutGrassSet.add(field);

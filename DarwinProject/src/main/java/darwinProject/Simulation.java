@@ -51,23 +51,16 @@ public class Simulation implements Runnable
             world.handlePlantConsumption();
             world.handleReproduction();
             world.generateNewGrassPositions();
-//            System.out.println(world);
-//            try {
-//                Thread.sleep(2000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+            System.out.println(world);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
 
         }
     }
 
-    public List<Animal> getAnimals() {
-        return List.copyOf(animals);
-    }
-
-    public void kill(Animal animal) {
-            animals.remove(animal); // Usuwamy zwierzę z listy zwierząt
-    }
 }
 

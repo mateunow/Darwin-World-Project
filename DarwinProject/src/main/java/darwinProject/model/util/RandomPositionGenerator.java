@@ -13,8 +13,8 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
 
         // Generate all possible positions
         List<Vector2d> allPositions = new ArrayList<>();
-        for (int x = 0; x < maxWidth; x++) {
-            for (int y = 0; y < maxHeight; y++) {
+        for (int x = 0; x <= maxWidth; x++) {
+            for (int y = 0; y <= maxHeight; y++) {
                 allPositions.add(new Vector2d(x, y));
             }
         }

@@ -15,7 +15,6 @@ public class EarthMap extends AbstractWorldMap {
     //TODO zoptymalizuj tą klasę bo pewnie da się lepiej
 
 
-
     public EarthMap(int height, int width, int startGrassCount, int numberOfPlantsGrownDaily, int energyFromEatingPlant) {
         super(height, width, startGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlant);
     }
@@ -78,7 +77,8 @@ public class EarthMap extends AbstractWorldMap {
     public List<WorldElement> getElements() {
         List<WorldElement> worldElements = super.getElements();
         for (SortedSet<Animal> animalSet : animals.values()) {
-            worldElements.addAll(animalSet);  }
+            worldElements.addAll(animalSet);
+        }
         worldElements.addAll(grassMap.values());
         return worldElements;
     }
@@ -88,4 +88,6 @@ public class EarthMap extends AbstractWorldMap {
         return animals.stream()
                 .max(Comparator.comparingInt(Animal::getEnergy))
                 .orElseThrow(() -> new IllegalStateException("No animals at position"));
+
     }
+}
