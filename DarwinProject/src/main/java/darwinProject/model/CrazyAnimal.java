@@ -1,12 +1,10 @@
 package darwinProject.model;
 
 public class CrazyAnimal extends Animal {
-    private final int numberOfGenes;
     //TODO tego private finala usunąć może jakoś do animala
 
     public CrazyAnimal(Vector2d position, Integer numberOfGenes, Integer startingEnergy) {
         super(position, numberOfGenes, startingEnergy, 1, 1, 1, 1);
-        this.numberOfGenes = numberOfGenes;
     }
 
     @Override
@@ -22,3 +20,4 @@ public class CrazyAnimal extends Animal {
         currentGene %= maxGene;
     }
 }
+
