@@ -86,6 +86,7 @@ public class EarthMap extends AbstractWorldMap {
         return grassMap.get(position);
 
     }
+
     @Override
     public Set<Vector2d> findFieldsWithoutGrass() {
         Boundary boundary = getCurrentBounds();
@@ -118,5 +119,9 @@ public class EarthMap extends AbstractWorldMap {
 
     public Set<Vector2d> getFieldsWithoutGrass() {
         return fieldsWithoutGrass;
+    }
+
+    public int getNumberOfPlantsGrownDaily(){
+        return numberOfPlantsGrownDaily;
     }
 }

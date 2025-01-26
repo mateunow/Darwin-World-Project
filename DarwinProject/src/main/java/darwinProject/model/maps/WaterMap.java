@@ -130,7 +130,9 @@ public class WaterMap extends EarthMap {
 
                 // Jeśli jest zwierzę na tym polu, zabijamy je
                 if (animals.containsKey(newPosition)) {
-                    animals.get(newPosition).die();  // Zabijamy zwierzę
+                    animals.remove(newPosition); // Usuwamy zwierze
+                    // TODO co z tym kill?
+                    animals.get(newPosition).die();  // Ustalamy datę śmierci
                     notifyObservers("Animal died due to water at " + newPosition);
                 }
 

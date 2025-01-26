@@ -14,7 +14,7 @@ public class Animal implements WorldElement {
     private int energy;
     protected final int maxGene = 7;
     private final ArrayList<Integer> genome;
-    protected int currentGene;
+    public int currentGene;
     private int daysLived = 0;
     private int plantsEaten;
     private int dayOfDeath;
@@ -189,4 +189,13 @@ public class Animal implements WorldElement {
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
     }
+
+    public int getDaysLived() {
+        return this.daysLived;
+    }
+
+    public int getPlantsEaten(){
+        return this.plantsEaten;
+    }
+
 }
