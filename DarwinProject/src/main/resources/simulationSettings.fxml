@@ -4,10 +4,10 @@
 <?import javafx.geometry.Pos?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="darwinProject.presenter.SimulationSettingsWindow">
+
     <VBox alignment="CENTER" spacing="10">
         <Label text="Ustawienia Symulacji" style="-fx-font-size: 18px;"/>
 
-        <!-- Existing Fields -->
         <HBox spacing="10">
             <Label text="Szerokość mapy:"/>
             <TextField fx:id="mapWidthField" promptText="Wprowadź szerokość mapy"/>
@@ -28,50 +28,50 @@
             <TextField fx:id="numMovesField" promptText="Wprowadź liczbę kroków"/>
         </HBox>
 
-        <!-- New Fields for Plant and Animal Parameters -->
+        <!-- New Fields for Additional Settings -->
         <HBox spacing="10">
-            <Label text="Startowa liczba roślin:"/>
-            <TextField fx:id="startingGrassCountField" promptText="Wprowadź liczbę roślin"/>
+            <Label text="Liczba roślin startowych:"/>
+            <TextField fx:id="startingGrassCountField" promptText="Wprowadź liczbę roślin startowych"/>
         </HBox>
 
         <HBox spacing="10">
-            <Label text="Energia z roślin:"/>
-            <TextField fx:id="energyFromEatingPlantsField" promptText="Energia z jednej rośliny"/>
+            <Label text="Energia zjedzenia rośliny:"/>
+            <TextField fx:id="energyFromEatingPlantsField" promptText="Wprowadź energię z roślin"/>
         </HBox>
 
         <HBox spacing="10">
-            <Label text="Liczba roślin na dzień:"/>
-            <TextField fx:id="numberOfPlantsGrownDailyField" promptText="Wprowadź liczbę roślin na dzień"/>
+            <Label text="Liczba roślin wyrastających dziennie:"/>
+            <TextField fx:id="numberOfPlantsGrownDailyField" promptText="Wprowadź liczbę roślin dziennie"/>
         </HBox>
 
         <HBox spacing="10">
-            <Label text="Energia zwierzęcia (startowa):"/>
+            <Label text="Startowa energia:"/>
             <TextField fx:id="startingEnergyField" promptText="Wprowadź startową energię"/>
         </HBox>
 
         <HBox spacing="10">
-            <Label text="Energia potrzebna do rozmnożenia:"/>
-            <TextField fx:id="energyReadyToReproduceField" promptText="Energia potrzebna do rozmnożenia"/>
+            <Label text="Energia do rozmnażania:"/>
+            <TextField fx:id="energyReadyToReproduceField" promptText="Wprowadź energię do rozmnażania"/>
         </HBox>
 
         <HBox spacing="10">
-            <Label text="Energia na rozmnożenie:"/>
-            <TextField fx:id="energyToReproduceField" promptText="Energia zużywana do rozmnożenia"/>
+            <Label text="Energia do rozmnażania potomstwa:"/>
+            <TextField fx:id="energyToReproduceField" promptText="Wprowadź energię na potomstwo"/>
         </HBox>
 
         <HBox spacing="10">
             <Label text="Minimalna liczba mutacji:"/>
-            <TextField fx:id="minNumberOfMutationsField" promptText="Minimalna liczba mutacji"/>
+            <TextField fx:id="minNumberOfMutationsField" promptText="Wprowadź minimalną liczbę mutacji"/>
         </HBox>
 
         <HBox spacing="10">
             <Label text="Maksymalna liczba mutacji:"/>
-            <TextField fx:id="maxNumberOfMutationsField" promptText="Maksymalna liczba mutacji"/>
+            <TextField fx:id="maxNumberOfMutationsField" promptText="Wprowadź maksymalną liczbę mutacji"/>
         </HBox>
 
         <HBox spacing="10">
-            <Label text="Długość genomu:"/>
-            <TextField fx:id="numberOfGenesField" promptText="Wprowadź długość genomu"/>
+            <Label text="Liczba genów:"/>
+            <TextField fx:id="numberOfGenesField" promptText="Wprowadź liczbę genów"/>
         </HBox>
 
         <Label fx:id="errorMessageLabel" style="-fx-text-fill: red;"/>
@@ -79,3 +79,4 @@
         <Button text="Rozpocznij Symulację" onAction="#onStartSimulation" style="-fx-font-size: 14px;"/>
     </VBox>
 </AnchorPane>
+

@@ -76,13 +76,10 @@ public class SimulationSettingsWindow {
     @FXML
     private void onStartSimulation() {
         try {
-            // Get values from all the fields
             int mapWidth = Integer.parseInt(mapWidthField.getText());
             int mapHeight = Integer.parseInt(mapHeightField.getText());
             int numAnimals = Integer.parseInt(numAnimalsField.getText());
             int numMoves = Integer.parseInt(numMovesField.getText());
-
-            // New parameters related to plants and animals
             int startingGrassCount = Integer.parseInt(startingGrassCountField.getText());
             int energyFromEatingPlants = Integer.parseInt(energyFromEatingPlantsField.getText());
             int numberOfPlantsGrownDaily = Integer.parseInt(numberOfPlantsGrownDailyField.getText());
@@ -94,7 +91,8 @@ public class SimulationSettingsWindow {
             int numberOfGenes = Integer.parseInt(numberOfGenesField.getText());
 
             // Check if the data is valid
-            if (mapWidth <= 0 || mapHeight <= 0 || numAnimals <= 0 || numMoves <= 0 || startingGrassCount <= 0) {
+            if (mapWidth <= 0 || mapHeight <= 0 || numAnimals <= 0 || numMoves <= 0 || startingGrassCount <= 0 || energyFromEatingPlants <= 0 || numberOfGenes <= 0
+            || numberOfPlantsGrownDaily <= 0 || startingEnergy <= 0 || energyReadyToReproduce <= 0 || minNumberOfMutations <= 0 || maxNumberOfMutations <= 0 || energyToReproduce <= 0) {
                 throw new NumberFormatException("Wszystkie dane muszą być dodatnie!");
             }
 
