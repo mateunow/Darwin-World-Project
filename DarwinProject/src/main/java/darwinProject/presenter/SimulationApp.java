@@ -4,6 +4,7 @@ import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
 import darwinProject.model.maps.EarthMap;
 import darwinProject.model.Vector2d;
+import darwinProject.statistics.SimulationStatistics;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -26,7 +27,7 @@ public class SimulationApp extends Application {
         AbstractWorldMap map = new EarthMap(10, 10, 3, 2, 20);
         map.registerObservers(presenter);
 
-        // Ustawienie pozycji początkowych zwierząt
+// Ustawienie pozycji początkowych zwierząt
         List<Vector2d> initialPositions = List.of(new Vector2d(1, 2), new Vector2d(3, 4));
         for (Vector2d position : initialPositions) {
             try {
@@ -36,16 +37,21 @@ public class SimulationApp extends Application {
             }
         }
 
-        // Powiązanie mapy z prezenterem
+// Powiązanie mapy z prezenterem
         presenter.setWorldMap(map);
         Platform.runLater(() -> presenter.mapChanged(map, "Przykładowa mapa początkowa. TODO???"));
 
-        // Konfiguracja sceny z załadowaniem arkusza stylów CSS
+// Uruchomienie okna statystyk
+        SimulationStatistics stats = new SimulationStatistics(map);
+        stats.showStatisticsWindow();
+        // Dodane wywołanie
+
+// Konfiguracja sceny z załadowaniem arkusza stylów CSS
         var scene = new Scene(viewRoot);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);
 
-        // Konfiguracja okna
+// Konfiguracja okna
         primaryStage.setTitle("Simulation app");
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
