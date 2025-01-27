@@ -101,10 +101,7 @@ public class Animal implements Comparable<Animal>, WorldElement {
 
 
     public void move(WorldMap map) {
-        this.energy -= 20;
-        if (isDead()) {
-            this.die();
-        }
+        reduceEnergy(20);
         Vector2d potentialNewPosition = this.position.add(this.getDirection().toUnitVector());
 
         Boundary boundary = map.getCurrentBounds();
@@ -128,7 +125,12 @@ public class Animal implements Comparable<Animal>, WorldElement {
                 this.turn(genome.get(currentGene));
             }
         }
-        daysLived +=1;
+        if (isDead()) {
+            this.die();
+        }
+        else {
+            daysLived += 1;
+        }
     }
 
     public Animal reproduceWithOtherAnimal(Animal animal) {
@@ -218,10 +220,6 @@ public class Animal implements Comparable<Animal>, WorldElement {
     public int getChildrenCount(){
         return this.childrenCount;
     }
-    public boolean isAt(Vector2d position) {
-        return this.position.equals(position);
-    }
-
 
     public int getDaysLived() {
         return this.daysLived;

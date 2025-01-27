@@ -66,22 +66,16 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
+
     public void handleDeath() {
         List<Animal> deadAnimalsToRemove = new ArrayList<>();
         for (Animal animal : livingAnimals) {
             if (animal.isDead()) {
                 deadAnimals.add(animal);
                 deadAnimalsToRemove.add(animal);
-                Vector2d position = animal.getPosition();
-                SortedSet<Animal> animalsAtPosition = animals.get(position);
-                if (animalsAtPosition != null) {
-                    animalsAtPosition.remove(animal);
-                    if (animalsAtPosition.isEmpty()) {
-                        animals.remove(position);
-                    }
+
                 }
             }
-        }
         livingAnimals.removeAll(deadAnimalsToRemove);
         notifyObservers("Living animals moved, dead ones removed");
     }
@@ -130,6 +124,7 @@ public abstract class AbstractWorldMap implements WorldMap {
                         Animal child = parent1.reproduceWithOtherAnimal(parent2);
                         try {
                             placeAnimal(child, entry.getKey());
+                            System.out.println("ADDED ANIMAL" + child);
                         }
                         catch (Exception e) {
                             System.out.println("Nie udało się postawić zwierzęcia" + e.getMessage());
@@ -178,7 +173,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
 
-    @Override
+
     public abstract boolean canMoveTo(Vector2d position);
 
     @Override

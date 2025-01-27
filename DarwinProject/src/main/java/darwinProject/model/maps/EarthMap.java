@@ -27,16 +27,14 @@ public class EarthMap extends AbstractWorldMap {
         animal.move(this);
         Vector2d animalNewPosition = animal.getPosition();
 
-        // Remove animal from current position
+        // Remove animal from the old position
         SortedSet<Animal> animalsAtCurrentPosition = animals.get(currentPosition);
         if (animalsAtCurrentPosition != null) {
             animalsAtCurrentPosition.remove(animal);
-            if (animalsAtCurrentPosition.isEmpty()) {
-                animals.remove(currentPosition);
-            }
+            animals.remove(currentPosition);
         }
 
-        // Add animal to new position
+        // Add animal to the new position
         animals.computeIfAbsent(animalNewPosition, k -> new TreeSet<>()).add(animal);
 
         // Notify observers if the position or direction has changed

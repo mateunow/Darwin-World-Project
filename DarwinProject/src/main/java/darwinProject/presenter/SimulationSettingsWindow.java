@@ -66,6 +66,37 @@ public class SimulationSettingsWindow {
         mapTypeComboBox.getItems().setAll(MapType.values());
     }
 
+    public SimulationData getSimulationData() {
+        try {
+            // Get values from all the fields
+            int mapWidth = Integer.parseInt(mapWidthField.getText());
+            int mapHeight = Integer.parseInt(mapHeightField.getText());
+            int numAnimals = Integer.parseInt(numAnimalsField.getText());
+            int startingGrassCount = Integer.parseInt(startingGrassCountField.getText());
+            int energyFromEatingPlants = Integer.parseInt(energyFromEatingPlantsField.getText());
+            int numberOfPlantsGrownDaily = Integer.parseInt(numberOfPlantsGrownDailyField.getText());
+            int startingEnergy = Integer.parseInt(startingEnergyField.getText());
+            int energyReadyToReproduce = Integer.parseInt(energyReadyToReproduceField.getText());
+            int energyToReproduce = Integer.parseInt(energyToReproduceField.getText());
+            int minNumberOfMutations = Integer.parseInt(minNumberOfMutationsField.getText());
+            int maxNumberOfMutations = Integer.parseInt(maxNumberOfMutationsField.getText());
+            int numberOfGenes = Integer.parseInt(numberOfGenesField.getText());
+
+            // Get selected values for animal and map types
+            AnimalType selectedAnimalType = animalTypeComboBox.getValue();
+            MapType selectedMapType = mapTypeComboBox.getValue();
+
+            // Return a new SimulationData object
+            return new SimulationData(
+                    mapWidth, mapHeight, numAnimals, startingGrassCount, energyFromEatingPlants,
+                    numberOfPlantsGrownDaily, startingEnergy, energyReadyToReproduce, energyToReproduce,
+                    minNumberOfMutations, maxNumberOfMutations, numberOfGenes, selectedAnimalType, selectedMapType
+            );
+        } catch (NumberFormatException e) {
+            // Handle invalid input (e.g., show error message)
+            return null; // You could show a dialog here to indicate failure
+        }
+    }
     // Method to start the simulation based on user input
     @FXML
     private void onStartSimulation() {
@@ -122,28 +153,38 @@ public class SimulationSettingsWindow {
             Stage newStage = new Stage();
             newStage.setTitle("Simulation Window");
 
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("simulation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/simulation.fxml"));
             BorderPane newRoot = loader.load();
 
-            SimulationPresenter newPresenter = loader.getController();
+            // Get the controller to pass simulation parameters
+            SimulationPresenter presenter = loader.getController();
 
-            // Pass the parameters to the Simulation class
+            // Create and configure the simulation
             Simulation simulation = new Simulation(
                     mapHeight, mapWidth, startingGrassCount, energyFromEatingPlants, numberOfPlantsGrownDaily,
                     numAnimals, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations,
                     numberOfGenes, startingEnergy, animalType, mapType);
 
+            // Assign the world map and simulation to the presenter
+            presenter.setWorldMap(simulation.getWorldMap());
+            presenter.simulation = simulation;
+
+            // Initialize the simulation engine
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
+            presenter.engine = engine;
 
-            newPresenter.moveDescriptionLabel.setText("Simulation started!");
+            // Start the simulation engine asynchronously
+            new Thread(() -> engine.runAsync()).start();
 
-            new Thread(engine::runSync).start();
-
+            // Show the simulation UI
             Scene scene = new Scene(newRoot);
             newStage.setScene(scene);
             newStage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 }

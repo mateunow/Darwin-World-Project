@@ -11,44 +11,82 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-
 public class SimulationApp extends Application {
+
+    private SimulationSettingsWindow settingsWindow;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Ładowanie pliku FXML
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
-        BorderPane viewRoot = loader.load();
-        SimulationPresenter presenter = loader.getController();
+        // Open the settings window
+        FXMLLoader settingsLoader = new FXMLLoader();
+        settingsLoader.setLocation(getClass().getClassLoader().getResource("simulationSettings.fxml"));
+        BorderPane settingsRoot = settingsLoader.load();
+        settingsWindow = settingsLoader.getController();
 
-        // Inicjalizacja mapy i ustawienie obserwatorów
-        AbstractWorldMap map = new EarthMap(10, 10, 3, 2, 20);
-        map.registerObservers(presenter);
+        // Show the settings window
+        Scene settingsScene = new Scene(settingsRoot);
+        Stage settingsStage = new Stage();
+        settingsStage.setScene(settingsScene);
+        settingsStage.setTitle("Simulation Settings");
+        settingsStage.show();
 
-        // Ustawienie pozycji początkowych zwierząt
-        List<Vector2d> initialPositions = List.of(new Vector2d(1, 2), new Vector2d(3, 4));
+        // Wait for user input and then close settings window
+        settingsStage.setOnCloseRequest(event -> {
+            SimulationData data = settingsWindow.getSimulationData();
+            if (data != null) {
+                try {
+                    startSimulation(primaryStage, data);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                // Show error message or do nothing if data is invalid
+            }
+        });
+    }
+
+    private void startSimulation(Stage primaryStage, SimulationData data) throws IOException {
+        // Create a map with the received data
+        AbstractWorldMap map = new EarthMap(
+                data.mapWidth, data.mapHeight, data.startingGrassCount, data.energyFromEatingPlants,
+                data.numberOfPlantsGrownDaily);
+        map.registerObservers(new SimulationPresenter());
+
+        // Set up initial positions for animals, use the number of animals from the input
+        List<Vector2d> initialPositions = new ArrayList<>();
+        for (int i = 0; i < data.numAnimals; i++) {
+            initialPositions.add(new Vector2d(i, i)); // Customize animal positions if needed
+        }
+
+        // Place animals on the map
         for (Vector2d position : initialPositions) {
             try {
-                map.place(new Animal(position, 7, 50, 30, 20, 0, 3)); //TODO CHANGE THIS TO VARIABLES
+                map.place(new Animal(position, 7, 50, 30, 20, 0, 3));
             } catch (Exception e) {
-                System.err.println("Nie udało się ustawić zwierzęcia na pozycji " + position + ": " + e.getMessage());
+                System.err.println("Error placing animal: " + e.getMessage());
             }
         }
 
-        // Powiązanie mapy z prezenterem
+        // Create the simulation window and start the simulation
+        SimulationPresenter presenter = new SimulationPresenter();
         presenter.setWorldMap(map);
-        Platform.runLater(() -> presenter.mapChanged(map, "Przykładowa mapa początkowa. TODO???"));
+        SimulationPresenter finalPresenter = presenter;
+        Platform.runLater(() -> finalPresenter.mapChanged(map, "Initial map setup"));
 
-        // Konfiguracja sceny z załadowaniem arkusza stylów CSS
+        // Load the simulation FXML and setup scene
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
+        BorderPane viewRoot = loader.load();
+        presenter = loader.getController();
+
         var scene = new Scene(viewRoot);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);
 
-        // Konfiguracja okna
         primaryStage.setTitle("Simulation app");
-        primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
-        primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
         primaryStage.show();
     }
 }
