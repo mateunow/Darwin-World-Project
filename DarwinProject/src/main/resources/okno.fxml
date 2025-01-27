@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import darwinProject.presenter.SimulationPresenter?>
+<?import javafx.scene.layout.GridPane?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="darwinProject.presenter.SimulationPresenter">
+    <!-- Sekcja górna - kontenery mapy i szczegółów -->
+<!--    <RowConstraints minHeight="300" prefHeight="300" maxHeight="300"/>-->
+<!--    <RowConstraints minHeight="150" prefHeight="150" maxHeight="200"/>-->
+
+    <!-- Mapa -->
+    <GridPane fx:id="mapGrid" GridPane.columnSpan="2" GridPane.rowIndex="0"/>
+
+    <!-- Panel szczegółów -->
+    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0">
+        <Label fx:id="selectedAnimalLabel" text="Wybierz zwierzę na mapie, aby wyświetlić szczegóły"/>
+        <Label fx:id="animalDetailsLabel" text="Informacje o zwierzęciu:"/>
+        <Label fx:id="energyLabel" text="Energia: "/>
+        <Label fx:id="daysLivedLabel" text="Dni życia: "/>
+        <Label fx:id="plantsEatenLabel" text="Rośliny zjedzone: "/>
+    </VBox>
+
+    <!-- Panel boczny - przyciski i kontrolki -->
+    <VBox GridPane.rowIndex="0" GridPane.columnIndex="2" spacing="10" style="-fx-padding: 10;">
+        <Button text="Start" fx:id="startButton" onAction="#startSimulation"/>
+        <Button text="Pause" fx:id="pauseButton"/>
+        <Slider fx:id="speedSlider" min="1" max="100" showTickMarks="true" showTickLabels="true" />
+        <Label text="Prędkość symulacji"/>
+    </VBox>
+</GridPane>

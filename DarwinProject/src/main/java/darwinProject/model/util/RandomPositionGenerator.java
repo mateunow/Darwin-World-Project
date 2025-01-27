@@ -32,10 +32,10 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
             positions.addAll(positions);
         }
         else{
-        Collections.shuffle(positions);
-        for (int i = 0; i < grassCount; i++) {
-            positions.add(positions.get(i));
-        }
+            Collections.shuffle(positions);
+            for (int i = 0; i < grassCount; i++) {
+                positions.add(positions.get(i));
+            }
         }
     }
 

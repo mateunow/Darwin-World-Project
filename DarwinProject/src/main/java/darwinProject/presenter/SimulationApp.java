@@ -1,9 +1,10 @@
 package darwinProject.presenter;
 
+import darwinProject.Simulation;
 import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
-import darwinProject.model.maps.EarthMap;
 import darwinProject.model.Vector2d;
+import darwinProject.model.maps.EarthMap;
 import darwinProject.statistics.SimulationStatistics;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -13,10 +14,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class SimulationApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
+        System.out.println("Hello World!");
+
         // Ładowanie pliku FXML
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
@@ -27,7 +32,7 @@ public class SimulationApp extends Application {
         AbstractWorldMap map = new EarthMap(10, 10, 3, 2, 20);
         map.registerObservers(presenter);
 
-// Ustawienie pozycji początkowych zwierząt
+        // Ustawienie pozycji początkowych zwierząt
         List<Vector2d> initialPositions = List.of(new Vector2d(1, 2), new Vector2d(3, 4));
         for (Vector2d position : initialPositions) {
             try {
@@ -37,24 +42,37 @@ public class SimulationApp extends Application {
             }
         }
 
-// Powiązanie mapy z prezenterem
+        // Powiązanie mapy z prezenterem
         presenter.setWorldMap(map);
         Platform.runLater(() -> presenter.mapChanged(map, "Przykładowa mapa początkowa. TODO???"));
 
-// Uruchomienie okna statystyk
+        // Uruchomienie symulacji
+        startSimulation(map, presenter);
+
+        // Uruchomienie okna statystyk
         SimulationStatistics stats = new SimulationStatistics(map);
         stats.showStatisticsWindow();
-        // Dodane wywołanie
 
-// Konfiguracja sceny z załadowaniem arkusza stylów CSS
+        // Konfiguracja sceny z załadowaniem arkusza stylów CSS
         var scene = new Scene(viewRoot);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);
 
-// Konfiguracja okna
+        // Konfiguracja okna
         primaryStage.setTitle("Simulation app");
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
         primaryStage.show();
+    }
+
+    private void startSimulation(AbstractWorldMap map, SimulationPresenter presenter) {
+        // Tworzymy symulację
+        Simulation simulation = new Simulation(10, 10, 3, 2, 20, 20, 50, 30, 0, 3, 7, 50, presenter);
+        SimulationEngine engine = new SimulationEngine(List.of(simulation));
+
+        // Uruchamiamy symulację asynchronicznie
+        new Thread(() -> {
+            engine.runAsync(); // Uruchomienie symulacji w tle
+        }).start();
     }
 }

@@ -79,6 +79,7 @@ public class EarthMap extends AbstractWorldMap {
         }
     }
 
+
     @Override
     public WorldElement objectAt(Vector2d position) {
         WorldElement object = super.objectAt(position);

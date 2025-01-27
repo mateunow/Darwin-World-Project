@@ -7,6 +7,7 @@ import darwinProject.model.util.Boundary;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
+import javafx.scene.paint.Color;
 
 public class Animal implements WorldElement {
     protected MapDirection direction;
@@ -64,17 +65,35 @@ public class Animal implements WorldElement {
 
 
     public String toString() {
-        return switch (this.direction) {
-            case NORTH -> "↑";        // Zwróć strzałkę w górę (Unicode: \u2191)
-            case NORTHEAST -> "↗";    // Zwróć strzałkę w górny-prawy róg (Unicode: \u2197)
-            case EAST -> "→";         // Zwróć strzałkę w prawo (Unicode: \u2192)
-            case SOUTHEAST -> "↘";    // Zwróć strzałkę w dolny-prawy róg (Unicode: \u2198)
-            case SOUTH -> "↓";        // Zwróć strzałkę w dół (Unicode: \u2193)
-            case SOUTHWEST -> "↙";    // Zwróć strzałkę w dolny-lewy róg (Unicode: \u2199)
-            case WEST -> "←";         // Zwróć strzałkę w lewo (Unicode: \u2190)
-            case NORTHWEST -> "↖";    // Zwróć strzałkę w górny-lewy róg (Unicode: \u2196)
+        String directionSymbol = switch (this.direction) {
+            case NORTH -> "↑";
+            case NORTHEAST -> "↗";
+            case EAST -> "→";
+            case SOUTHEAST -> "↘";
+            case SOUTH -> "↓";
+            case SOUTHWEST -> "↙";
+            case WEST -> "←";
+            case NORTHWEST -> "↖";
         };
+
+        Color color = getColorBasedOnEnergy(); // Pobieranie koloru na podstawie energii
+
+        // Jeśli chcesz, możesz po prostu dołączyć kolory do znaków, ale ostateczne rysowanie musi się odbywać w JavaFX
+        return directionSymbol;
     }
+
+
+
+    public Color getColorBasedOnEnergy() {
+        if (this.energy < 20) {
+            return Color.RED;      // Niska energia - czerwony
+        } else if (this.energy < 50) {
+            return Color.ORANGE;   // Średnia energia - pomarańczowy
+        } else {
+            return Color.GREEN;    // Wysoka energia - zielony
+        }
+    }
+
 
 
     public void move(WorldMap map) {
@@ -190,7 +209,7 @@ public class Animal implements WorldElement {
         return this.position.equals(position);
     }
 
-    public int getDaysLived() {
+    public int getAge() {
         return this.daysLived;
     }
 

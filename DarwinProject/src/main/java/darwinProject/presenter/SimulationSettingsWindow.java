@@ -91,8 +91,8 @@ public class SimulationSettingsWindow {
             AbstractWorldMap map = new EarthMap(mapWidth, mapHeight, numAnimals, 2, numMoves); // Tutaj wstawiamy odpowiednie parametry
             map.registerObservers(newPresenter);
             newPresenter.setWorldMap(map);
-
-            Simulation simulation = new Simulation(mapWidth, mapHeight, numMoves, numAnimals, 50, 20, 0, 3, 7, 50,1,1);
+            SimulationPresenter presenter = new SimulationPresenter();
+            Simulation simulation = new Simulation(mapWidth, mapHeight, numMoves, numAnimals, 50, 20, 0, 3, 7, 50,1,1,presenter);
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
 
             newPresenter.moveDescriptionLabel.setText("Symulacja rozpoczęta!");
