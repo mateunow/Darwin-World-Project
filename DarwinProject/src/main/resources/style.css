@@ -1,0 +1,46 @@
+.root {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-position: center;
+}
+
+
+.button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+}
+
+.button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.text-field {
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+}
+
+.label {
+    -fx-font-family: "Segoe UI Emoji";  /* Wspiera emoji na Windowsie */
+    -fx-font-size: 16px;
+    -fx-text-fill: #000000;
+    -fx-alignment: center-left; /* Wyrównanie tekstu do lewej strony */
+}
+
+#mapGrid {
+    -fx-border-color: #2c3e50;
+    -fx-background-image: url("background.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover; /* Dopasowanie do rozmiaru GridPane */
+    -fx-background-position: center center; /* Obraz wyśrodkowany */
+}
+
+#moveListTextField {
+    -fx-pref-width: 200px;
+}
+
+#moveDescriptionLabel {
+    color: #FF5733; /* zmień na wybrany kolor, np. czerwień */
+}
+

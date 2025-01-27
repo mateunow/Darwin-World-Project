@@ -4,15 +4,13 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
-            fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+            fx:controller="darwinProject.presenter.SimulationPresenter">
     <top>
         <VBox spacing="10" alignment="CENTER">
-            <TextField fx:id="moveListTextField" promptText="Enter moves"/>
             <Label fx:id="moveDescriptionLabel" text="Move description will be displayed here" textAlignment="CENTER"/>
             <Button text="Start" onAction="#startSimulation"/>
         </VBox>

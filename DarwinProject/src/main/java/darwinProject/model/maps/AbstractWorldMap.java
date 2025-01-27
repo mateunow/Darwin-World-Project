@@ -57,49 +57,55 @@ public abstract class AbstractWorldMap implements WorldMap {
         for (Vector2d grassPosition : randomPositionGenerator) {
             grassMap.put(grassPosition, new Grass(grassPosition));
             fieldsWithoutGrass.remove(grassPosition);
+            notifyObservers("New grass added");
         }
     }
     public void handleMovement() {
-        List<Animal> deadAnimalsToRemove = new ArrayList<>();
-        System.out.println(livingAnimals.size());
         for (Animal animal : livingAnimals) {
             this.move(animal);
+        }
+    }
 
+
+    public void handleDeath() {
+        List<Animal> deadAnimalsToRemove = new ArrayList<>();
+        for (Animal animal : livingAnimals) {
             if (animal.isDead()) {
                 deadAnimals.add(animal);
                 deadAnimalsToRemove.add(animal);
-                System.out.println("DEAD ANIMAL" + animal);
-                Vector2d position = animal.getPosition();
-                SortedSet<Animal> animalsAtPosition = animals.get(position);
-                if (animalsAtPosition != null) {
-                    animalsAtPosition.remove(animal);
-                    if (animalsAtPosition.isEmpty()) {
-                        animals.remove(position);
 
-                    }
                 }
             }
-        }
-
         livingAnimals.removeAll(deadAnimalsToRemove);
+        notifyObservers("Living animals moved, dead ones removed");
     }
+
 
 
     public void handlePlantConsumption() {
         Map<Vector2d, List<Animal>> groupedAnimals = groupAnimalsByPosition();
 
-        for (Map.Entry<Vector2d, Grass> entry : grassMap.entrySet()) {
-            Vector2d position = entry.getKey();
-            Grass grass = entry.getValue();
+        if (!grassMap.isEmpty()) {
+            List<Vector2d> positionsToRemove = new ArrayList<>();
 
-            List<Animal> animalsAtPosition = groupedAnimals.get(position);
-            if (animalsAtPosition != null && !animalsAtPosition.isEmpty()) {
-                Animal strongestAnimal = getStrongestAnimal(animalsAtPosition);
-                strongestAnimal.addEnergy(energyFromEatingPlant);
+            for (Map.Entry<Vector2d, Grass> entry : grassMap.entrySet()) {
+                Vector2d position = entry.getKey();
+                List<Animal> animalsAtPosition = groupedAnimals.get(position);
+
+                if (animalsAtPosition != null && !animalsAtPosition.isEmpty()) {
+                    Animal strongestAnimal = getStrongestAnimal(animalsAtPosition);
+                    strongestAnimal.addEnergy(energyFromEatingPlant);
+                    positionsToRemove.add(position);
+                }
+            }
+
+            for (Vector2d position : positionsToRemove) {
                 grassMap.remove(position);
             }
         }
+        notifyObservers("Plants eaten");
     }
+
 
     public void handleReproduction() {
         Map<Vector2d, List<Animal>> groupedAnimals = groupAnimalsByPosition();
@@ -116,14 +122,22 @@ public abstract class AbstractWorldMap implements WorldMap {
 
                     if (parent1.canReproduce() && parent2.canReproduce()) {
                         Animal child = parent1.reproduceWithOtherAnimal(parent2);
-                        placeAnimal(child, entry.getKey());
-                        livingAnimals.add(child);
+                        try {
+                            placeAnimal(child, entry.getKey());
+                            System.out.println("ADDED ANIMAL" + child);
+                        }
+                        catch (Exception e) {
+                            System.out.println("Nie udało się postawić zwierzęcia" + e.getMessage());
+                        }
                     }
                 }
             }
         }
+        notifyObservers("Reproduction");
     }
-
+    public Grass grassAt(Vector2d position) {
+        return grassMap.get(position);
+    }
 
     protected Map<Vector2d, List<Animal>> groupAnimalsByPosition() {
         Map<Vector2d, List<Animal>> grouped = new HashMap<>();
@@ -139,12 +153,27 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public abstract void move(Animal animal) ;
-    protected abstract Animal getStrongestAnimal(List<Animal> animals);
 
-    protected abstract void placeAnimal(Animal animal, Vector2d position);
+    protected Animal getStrongestAnimal(List<Animal> animals) {
+        if (animals == null || animals.isEmpty()) {
+            throw new IllegalStateException("No animals at position");
+        }
+        return animals.stream().min(new AnimalPriorityComparator())
+                .orElseThrow(() -> new IllegalStateException("No animals at position"));
+    }
+
+    protected void placeAnimal(Animal animal, Vector2d position) throws IncorrectPositionException {
+        if (canMoveTo(position)) {
+            animals.computeIfAbsent(position, k -> new TreeSet<>()).add(animal);
+            livingAnimals.add(animal);
+        }
+        else {
+            throw new IncorrectPositionException(position);
+        }
+    }
 
 
-    @Override
+
     public abstract boolean canMoveTo(Vector2d position);
 
     @Override
@@ -155,7 +184,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     public void place(Animal animal) throws IncorrectPositionException {
         Vector2d position = animal.getPosition();
         if (canMoveTo(position)) {
-            // Use computeIfAbsent to get or create a SortedSet for the position
             animals.computeIfAbsent(position, k -> new TreeSet<>(new AnimalPriorityComparator())).add(animal);
             livingAnimals.add(animal);
             notifyObservers("Animal placed at " + animal.getPosition());
@@ -192,8 +220,8 @@ public abstract class AbstractWorldMap implements WorldMap {
         int height = boundary.upperRight().getX();
 
         Set<Vector2d> fieldsWithoutGrassSet = new HashSet<>();
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i <= width; i++) {
+            for (int j = 0; j <= height; j++) {
                 Vector2d field = new Vector2d(i, j);
                 if (!grassMap.containsKey(field)) {
                     fieldsWithoutGrassSet.add(field);

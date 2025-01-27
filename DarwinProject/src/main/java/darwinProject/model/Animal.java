@@ -4,30 +4,30 @@ import darwinProject.enums.MapDirection;
 import darwinProject.model.maps.WorldMap;
 import darwinProject.model.util.Boundary;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
+import javafx.scene.paint.Color;
 
 public class Animal implements Comparable<Animal>, WorldElement {
     protected MapDirection direction;
     private Vector2d position;
-    private int energy;
+    protected int energy;
     protected final int maxGene = 7;
     private final ArrayList<Integer> genome;
-    protected int currentGene;
+    public int currentGene;
     private int daysLived = 0;
     private int plantsEaten;
     private int dayOfDeath;
     private final Animal firstParent;
     private final Animal secondParent;
     private int offspringCount = 0;
-    private int childrenCount = 0;
-    Random rand = new Random();
-    private final Integer energyReadyToReproduce;
-    private final Integer energyToReproduce;
-    private final Integer minNumberOfMutations;
-    private final Integer maxNumberOfMutations;
+    protected int childrenCount = 0;
+    protected final Random rand = new Random();
+    protected final Integer energyReadyToReproduce;
+    protected final Integer energyToReproduce;
+    protected final Integer minNumberOfMutations;
+    protected final Integer maxNumberOfMutations;
     protected final int numberOfGenes;
 
 
@@ -68,48 +68,59 @@ public class Animal implements Comparable<Animal>, WorldElement {
 
     @Override
     public int compareTo(Animal other) {
-        // First compare by energy (descending order)
         if (this.energy != other.energy) {
-            return Integer.compare(other.energy, this.energy);  // descending order of energy
+            return Integer.compare(other.energy, this.energy);
         }
 
-        // If energies are equal, compare by age (descending order)
         if (this.daysLived != other.daysLived) {
-            return Integer.compare(other.daysLived, this.daysLived);  // descending order of age
+            return Integer.compare(other.daysLived, this.daysLived);
         }
-
-        // If both energy and age are the same, compare by children count (descending order)
         if (this.childrenCount != other.childrenCount) {
-            return Integer.compare(other.childrenCount, this.childrenCount);  // descending order of children count
+            return Integer.compare(other.childrenCount, this.childrenCount);}
+        if(rand.nextInt(2) == 0 ) {
+            return -1;
         }
-
-        // If all the above attributes are the same, return 0 (no order change)
-        return 0;
+        else {
+            return 1;
+        }
     }
 
 
 
     public String toString() {
-        return switch (this.direction) {
-            //TODO change those directions strings to emojis/something other than NE
-            //TODO add a value of energy
-            case NORTH -> "^";
-            case NORTHEAST -> "NE";
-            case EAST -> ">";
-            case SOUTHEAST -> "SE";
-            case SOUTH -> "v";
-            case SOUTHWEST -> "SW";
-            case WEST -> "<";
-            case NORTHWEST -> "NW";
+        String directionSymbol = switch (this.direction) {
+            case NORTH -> "↑";
+            case NORTHEAST -> "↗";
+            case EAST -> "→";
+            case SOUTHEAST -> "↘";
+            case SOUTH -> "↓";
+            case SOUTHWEST -> "↙";
+            case WEST -> "←";
+            case NORTHWEST -> "↖";
         };
+
+        Color color = getColorBasedOnEnergy(); // Pobieranie koloru na podstawie energii
+
+        // Jeśli chcesz, możesz po prostu dołączyć kolory do znaków, ale ostateczne rysowanie musi się odbywać w JavaFX
+        return directionSymbol;
     }
 
 
-    public void move(WorldMap map) {
-        this.energy -= 20;
-        if (isDead()) {
-            this.die();
+
+    public Color getColorBasedOnEnergy() {
+        if (this.energy < 20) {
+            return Color.RED;      // Niska energia - czerwony
+        } else if (this.energy < 50) {
+            return Color.ORANGE;   // Średnia energia - pomarańczowy
+        } else {
+            return Color.GREEN;    // Wysoka energia - zielony
         }
+    }
+
+
+
+    public void move(WorldMap map) {
+        reduceEnergy(20);
         Vector2d potentialNewPosition = this.position.add(this.getDirection().toUnitVector());
 
         Boundary boundary = map.getCurrentBounds();
@@ -133,7 +144,12 @@ public class Animal implements Comparable<Animal>, WorldElement {
                 this.turn(genome.get(currentGene));
             }
         }
-        daysLived +=1;
+        if (isDead()) {
+            this.die();
+        }
+        else {
+            daysLived += 1;
+        }
     }
 
     public Animal reproduceWithOtherAnimal(Animal animal) {
@@ -223,9 +239,15 @@ public class Animal implements Comparable<Animal>, WorldElement {
     public int getChildrenCount(){
         return this.childrenCount;
     }
-    public boolean isAt(Vector2d position) {
-        return this.position.equals(position);
+
+    public int getAge() {
+        return this.daysLived;
     }
+
+    public int getPlantsEaten(){
+        return this.plantsEaten;
+    }
+
     public int getAge(){
         return this.daysLived;
     }
@@ -234,3 +256,4 @@ public class Animal implements Comparable<Animal>, WorldElement {
         return (31 * getEnergy() * getAge());
     }
 }
+
