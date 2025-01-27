@@ -1,48 +1,80 @@
 package darwinProject.presenter;
 
-import darwinProject.Simulation;
-import darwinProject.model.*;
-import darwinProject.model.maps.*;
+import darwinProject.model.Vector2d;
+import darwinProject.model.maps.MapChangeListener;
+import darwinProject.model.maps.WorldMap;
 import darwinProject.model.util.Boundary;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.application.Platform;
+import javafx.geometry.HPos;
+import darwinProject.Simulation;
 import javafx.scene.layout.RowConstraints;
-import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import javafx.scene.layout.ColumnConstraints;
 
 public class SimulationPresenter implements MapChangeListener {
+
+    private WorldMap map;
+    protected Simulation simulation;
+    SimulationEngine engine;
+
+    @FXML
+    private GridPane mapGrid;
+    @FXML
+    private Label moveDescriptionLabel;
+
+
+    private int xMin;
+    private int yMin;
+    private int xMax;
+    private int yMax;
+    private int mapWidth;
+    private int mapHeight;
 
     private WorldMap map;
     private int xMin, yMin, xMax, yMax, mapWidth, mapHeight;
     private int cellWidth = 50;
     private int cellHeight = 50;
-    private final int mapMaxHeight = 300;
-    private final int mapMaxWidth = 300;
-
-    @FXML
-    private GridPane mapGrid;  // Przycisk widoku mapy (GridPane)
-    @FXML
-    private TextField moveListTextField;  // Pole tekstowe do wprowadzenia listy ruchów
-    @FXML
-    Label moveDescriptionLabel;  // Etykieta z opisem ruchów
-
     public void setWorldMap(WorldMap map) {
         this.map = map;
+        map.registerObservers(this);
+        drawMap();
+    }
+    public void startSimulation(){
+        // Create a new thread to run the simulation
+        new Thread(() -> {
+            int i = 0;
+            while(true) {
+                // Run the simulation logic
+                System.out.println("day " + i);
+                i++;
+
+                // Update world
+                simulation.getWorldMap().handleMovement();
+                simulation.getWorldMap().eatPlants();
+                simulation.getWorldMap().handlePlantConsumption();
+                simulation.getWorldMap().handleReproduction();
+                simulation.getWorldMap().generateNewGrassPositions();
+
+                // Update the UI
+                int finalI = i;
+                Platform.runLater(() -> {
+                    mapChanged(simulation.getWorldMap(), "Day " + finalI);
+                });
+
+                try {
+                  
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
-    // Aktualizacja wymiarów mapy
+    
+
     public void updateBounds() {
         Boundary boundary = map.getCurrentBounds();
         Vector2d lowerLeft = boundary.lowerLeft();
@@ -53,13 +85,14 @@ public class SimulationPresenter implements MapChangeListener {
         yMax = upperRight.getY();
         mapWidth = xMax - xMin + 1;
         mapHeight = yMax - yMin + 1;
+        int mapMaxWidth = 300;
         cellWidth = Math.round(mapMaxWidth / mapWidth);
+        int mapMaxHeight = 300;
         cellHeight = Math.round(mapMaxHeight / mapHeight);
         cellHeight = Math.min(cellHeight, cellWidth);
         cellWidth = cellHeight;
     }
 
-    // Dodawanie etykiet do kolumn
     public void columnsFunction() {
         for (int i = 0; i < mapWidth; i++) {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(cellWidth));
@@ -71,72 +104,58 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    // Dodawanie etykiet do wierszy
+
     public void rowsFunction() {
         for (int i = 0; i < mapHeight; i++) {
             mapGrid.getRowConstraints().add(new RowConstraints(cellHeight));
         }
-        for (int i = 0; i < mapHeight; i++) {
-            Label label = new Label(Integer.toString(yMax - i));
-            GridPane.setHalignment(label, HPos.CENTER);
-            mapGrid.add(label, 0, i + 1);
-        }
+
+
+        // Wrap the UI update code inside Platform.runLater
+        Platform.runLater(() -> {
+            for (int i = 0; i < mapHeight; i++) {
+                Label label = new Label(Integer.toString(yMax - i));
+                GridPane.setHalignment(label, HPos.CENTER);
+                mapGrid.add(label, 0, i + 1);
+            }
+        });
     }
 
-    // Dodawanie elementów (zwierząt, roślin itp.) do mapy
-    public void addElements() {
+
+    // Add elements (animals, plants) to the map
+    private void addElements() {
         for (int i = xMin; i <= xMax; i++) {
             for (int j = yMax; j >= yMin; j--) {
                 Vector2d pos = new Vector2d(i, j);
-                Label cellLabel = null;
 
-                if (map.isOccupied(pos)) {
-                    Object obj = map.objectAt(pos);
-
-                    if (obj instanceof Animal) {
-                        Animal animal = (Animal) obj;
-                        cellLabel = new Label(animal.toString()); // Strzałka z energią
-
-                        int energy = animal.getEnergy();  // Uzyskujemy energię zwierzęcia
-                        if (energy < 20) {
-                            cellLabel.setStyle("-fx-text-fill: red;");
-                        } else if (energy < 50) {
-                            cellLabel.setStyle("-fx-text-fill: orange;");
-                        } else {
-                            cellLabel.setStyle("-fx-text-fill: green;");
-                        }
-
-                        // Zdarzenie kliknięcia na komórkę z zwierzęciem
-                        cellLabel.setOnMouseClicked(event -> {
-                            moveDescriptionLabel.setText("Animal at " + pos + " has energy: " + energy);
-                        });
-
-                    } else if (obj instanceof Grass) {
-                        cellLabel = new Label("🌱"); // Przykład dla trawy
-                        // Zdarzenie kliknięcia na komórkę z trawą
-                        cellLabel.setOnMouseClicked(event -> {
-                            moveDescriptionLabel.setText("Grass at " + pos);
-                        });
+                // Wrap UI updates in Platform.runLater
+                int finalI = i;
+                int finalJ = j;
+                Platform.runLater(() -> {
+                    Label label;
+                    if (map.isOccupied(pos)) {
+                        label = new Label(map.objectAt(pos).toString());
+                    } else {
+                        label = new Label(" ");
                     }
-                } else {
-                    cellLabel = new Label(" ");  // Pusta przestrzeń
-                }
-
-                mapGrid.add(cellLabel, i - xMin + 1, yMax - j + 1);
-                mapGrid.setHalignment(cellLabel, HPos.CENTER);
+                    mapGrid.add(label, finalI - xMin + 1, yMax - finalJ + 1);
+                    mapGrid.setHalignment(label, HPos.CENTER); 
+                });
             }
         }
     }
 
-    // Funkcja odpowiedzialna za rysowanie mapy
+
+
+    
     private void drawMap() {
         updateBounds();
-        xyLabel();
         columnsFunction();
         rowsFunction();
         addElements();
         mapGrid.setGridLinesVisible(true);
     }
+
 
     // Funkcja do wyświetlenia współrzędnych
     private void xyLabel() {
@@ -150,21 +169,25 @@ public class SimulationPresenter implements MapChangeListener {
     // Funkcja czyszcząca grid przed rysowaniem nowego widoku
     private void clearGrid() {
         mapGrid.getChildren().clear();
+
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
     }
 
-    // Zmodyfikowana funkcja mapChanged z wywołaniem do rysowania nowego widoku mapy
+
     @Override
     public void mapChanged(WorldMap worldMap, String message) {
-        setWorldMap(worldMap);
+        setWorldMap(worldMap);  // Update the map reference
+
+        // Run UI updates on the JavaFX Application Thread
         Platform.runLater(() -> {
             moveDescriptionLabel.requestFocus();
-            clearGrid();
-            drawMap();
-            moveDescriptionLabel.setText(message);
+            clearGrid();         // Clear the current grid
+            drawMap();           // Re-draw the map
+            moveDescriptionLabel.setText(message);  // Update the move description
         });
     }
+
 
     // Metoda wywołująca updateMap z Simulation co sekundę
     public void updateMap() {
@@ -217,3 +240,4 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
 }
+

@@ -9,10 +9,10 @@ import java.util.Random;
 import java.util.ArrayList;
 import javafx.scene.paint.Color;
 
-public class Animal implements WorldElement {
+public class Animal implements Comparable<Animal>, WorldElement {
     protected MapDirection direction;
     private Vector2d position;
-    private int energy;
+    protected int energy;
     protected final int maxGene = 7;
     private final ArrayList<Integer> genome;
     public int currentGene;
@@ -22,12 +22,13 @@ public class Animal implements WorldElement {
     private final Animal firstParent;
     private final Animal secondParent;
     private int offspringCount = 0;
-    private int childrenCount = 0;
-    Random rand = new Random();
-    private final Integer energyReadyToReproduce;
-    private final Integer energyToReproduce;
-    private final Integer minNumberOfMutations;
-    private final Integer maxNumberOfMutations;
+    protected int childrenCount = 0;
+    protected final Random rand = new Random();
+    protected final Integer energyReadyToReproduce;
+    protected final Integer energyToReproduce;
+    protected final Integer minNumberOfMutations;
+    protected final Integer maxNumberOfMutations;
+    protected final int numberOfGenes;
 
 
     public Animal(Vector2d position, Integer numberOfGenes, Integer startingEnergy, Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations){
@@ -39,6 +40,7 @@ public class Animal implements WorldElement {
             genome.add(rand.nextInt(maxGene + 1));
         }
         this.currentGene = rand.nextInt(numberOfGenes);
+        this.numberOfGenes = numberOfGenes;
         this.direction = MapDirection.values()[rand.nextInt(MapDirection.values().length)];
         this.firstParent = null;
         this.secondParent = null;
@@ -53,6 +55,7 @@ public class Animal implements WorldElement {
         this.position = position;
         this.energy = energy;
         this.genome = genome;
+        this.numberOfGenes = genome.size();
         this.currentGene = rand.nextInt(genome.size());
         this.firstParent = firstParent;
         this.secondParent = secondParent;
@@ -62,6 +65,26 @@ public class Animal implements WorldElement {
         this.minNumberOfMutations = minNumberOfMutations;
         this.maxNumberOfMutations = maxNumberOfMutations;
     }
+
+    @Override
+    public int compareTo(Animal other) {
+        if (this.energy != other.energy) {
+            return Integer.compare(other.energy, this.energy);
+        }
+
+        if (this.daysLived != other.daysLived) {
+            return Integer.compare(other.daysLived, this.daysLived);
+        }
+        if (this.childrenCount != other.childrenCount) {
+            return Integer.compare(other.childrenCount, this.childrenCount);}
+        if(rand.nextInt(2) == 0 ) {
+            return -1;
+        }
+        else {
+            return 1;
+        }
+    }
+
 
 
     public String toString() {
@@ -97,6 +120,7 @@ public class Animal implements WorldElement {
 
 
     public void move(WorldMap map) {
+        reduceEnergy(20);
         Vector2d potentialNewPosition = this.position.add(this.getDirection().toUnitVector());
 
         Boundary boundary = map.getCurrentBounds();
@@ -120,7 +144,12 @@ public class Animal implements WorldElement {
                 this.turn(genome.get(currentGene));
             }
         }
-        daysLived +=1;
+        if (isDead()) {
+            this.die();
+        }
+        else {
+            daysLived += 1;
+        }
     }
 
     public Animal reproduceWithOtherAnimal(Animal animal) {
@@ -161,7 +190,7 @@ public class Animal implements WorldElement {
 
         // Apply mutations to some genes in the new genome
         int genomeSize = newGenome.size();
-        int numMutations = rand.nextInt(genomeSize + 1);
+        int numMutations = rand.nextInt(maxNumberOfMutations-minNumberOfMutations) + minNumberOfMutations;
         for (int i = 0; i < numMutations; i++) {
             int geneIndex = rand.nextInt(genomeSize);
             int newGeneValue = rand.nextInt(maxGene + 1);
@@ -195,6 +224,11 @@ public class Animal implements WorldElement {
     public void die() {
         this.dayOfDeath = this.daysLived;
     }
+    public boolean isDead() {
+        return (this.energy <= 0);
+    }
+    public boolean canReproduce() {
+        return energy > energyReadyToReproduce;  }
 
     public final List<Integer> getGenome() {
         return new ArrayList<>(this.genome);
@@ -205,9 +239,6 @@ public class Animal implements WorldElement {
     public int getChildrenCount(){
         return this.childrenCount;
     }
-    public boolean isAt(Vector2d position) {
-        return this.position.equals(position);
-    }
 
     public int getAge() {
         return this.daysLived;
@@ -217,4 +248,12 @@ public class Animal implements WorldElement {
         return this.plantsEaten;
     }
 
+    public int getAge(){
+        return this.daysLived;
+    }
+    @Override
+    public int hashCode() {
+        return (31 * getEnergy() * getAge());
+    }
 }
+

@@ -25,3 +25,4 @@ public class AnimalPriorityComparator implements Comparator<Animal> {
         return 0;
     }
 }
+

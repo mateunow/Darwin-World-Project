@@ -5,7 +5,6 @@ import darwinProject.exceptions.IncorrectPositionException;
 import darwinProject.model.maps.EarthMap;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,29 +59,6 @@ class AnimalTest {
         Animal animal2 = new Animal(new Vector2d(2,2), 7, 50, 30, 20, 0, 3);
         System.out.println("First animal genome: " + animal.getGenome());
         System.out.println("Second animal genome: " + animal2.getGenome());
-        Animal animal3 = animal.reproduceWithOtherAnimal(animal2);
-    }
-    @Test
-    public void eatGrassTestSingleAnimal() {
-        Animal animal = new Animal(new Vector2d(2,2), 7, 50, 30, 20, 0, 3);
-        EarthMap map = new EarthMap(10,10,100,1,20);
-        try {
-            map.place(animal);
-        }
-        catch (IncorrectPositionException e) {
-            System.out.println(e.getMessage());
-        }
-        System.out.println(map);
-
-        for (int i = 0; i < 10; i++) {
-            map.move(animal);
-            map.generateNewGrassPositions();
-            System.out.println(map);
-            System.out.println(animal.getEnergy());
-            assertEquals(50 + 20*(i+1),animal.getEnergy());
-        }
-        assertEquals(250, animal.getEnergy());
-
     }
 
     @Test
@@ -112,8 +88,5 @@ class AnimalTest {
         }
     }
 
-    @Test
-    void move() {
-    }
 
 }

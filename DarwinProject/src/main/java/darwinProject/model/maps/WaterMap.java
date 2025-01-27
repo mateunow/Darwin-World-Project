@@ -41,6 +41,25 @@ public class WaterMap extends AbstractWorldMap {
         }
     }
 
+    public void spreadRandomWater(int numberOfSpreadingTiles) {
+        List<Vector2d> waterPositions = new ArrayList<>(waterMap.keySet());
+
+        if (waterPositions.isEmpty()) {
+            notifyObservers("No water tiles available to spread.");
+            return;
+        }
+
+        Collections.shuffle(waterPositions, random);
+        int tilesToSpread = Math.min(numberOfSpreadingTiles, waterPositions.size());
+
+        for (int i = 0; i < tilesToSpread; i++) {
+            Vector2d waterPosition = waterPositions.get(i);
+            spreadWater(waterPosition);
+        }
+        notifyObservers(tilesToSpread + " random water tiles spread their water.");
+    }
+
+
     @Override
     public boolean canMoveTo(Vector2d position) {
         return !waterMap.containsKey(position) || position.precedes(upperRight) || position.follows(lowerLeft);
@@ -104,7 +123,6 @@ public class WaterMap extends AbstractWorldMap {
 
 
     public void spreadWater(Vector2d waterPosition) {
-        // Sprawdzanie kierunków: góra, dół, lewo, prawo
 
 //        TODO czy nie jest tak że da się to ładniej XD
         Vector2d[] directions = {
@@ -113,26 +131,28 @@ public class WaterMap extends AbstractWorldMap {
                 new Vector2d(-1, 0),  // Lewo
                 new Vector2d(1, 0)    // Prawo
         };
-
         for (Vector2d direction : directions) {
             Vector2d newPosition = waterPosition.add(direction);
 
-            // Sprawdzamy, czy pole już nie ma wody
-            if (waterMap.containsKey(newPosition)) {
-                continue;  // Jeśli już jest woda, przechodzimy do następnego kierunku
-            }
 
-            // Jeśli jest zwierzę na tym polu, zabijamy je
-            if (animals.containsKey(newPosition)) {
-                animals.remove(newPosition); // Usuwamy zwierze
-                // TODO co z tym kill?
-                SortedSet<Animal> animalsToDelete = animals.get(newPosition);  // Ustalamy datę śmierci
-                for (Animal animal : animalsToDelete) {
-                    animal.die();
-                    animals.remove(animal);
-                    deadAnimals.add(animal);
+                // Sprawdzamy, czy pole już nie ma wody
+                if (waterMap.containsKey(newPosition)) {
+                    continue;  // Jeśli już jest woda, przechodzimy do następnego kierunku
                 }
-                notifyObservers("Animal died due to water at " + newPosition);
+
+                // Jeśli jest zwierzę na tym polu, zabijamy je
+                if (animals.containsKey(newPosition)) {
+                    animals.remove(newPosition); // Usuwamy zwierze
+                    // TODO co z tym kill?
+                    SortedSet<Animal> animalsToDelete = animals.get(newPosition);  // Ustalamy datę śmierci
+                    for (Animal animal : animalsToDelete) {
+                        animal.die();
+                        animals.remove(animal);
+                        deadAnimals.add(animal);
+                    }
+                    notifyObservers("Animal died due to water at " + newPosition);
+                }
+               
             }
 
             // Jeśli jest trawa, usuwamy ją

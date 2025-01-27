@@ -14,6 +14,7 @@ public class Grass implements WorldElement {
 
     @Override
     public String toString() {
-        return "\uD83C\uDF31"; // Unicode dla kępki trawy 🌱
+        return "*"; // Unicode dla kępki trawy 🌱
     }
+//    \uD83C\uDF31
 }

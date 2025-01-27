@@ -1,97 +1,80 @@
 package darwinProject;
 
+import darwinProject.enums.AnimalType;
+import darwinProject.enums.MapType;
+import darwinProject.model.CrazyAnimal;
 import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
 import darwinProject.model.Vector2d;
 import darwinProject.exceptions.IncorrectPositionException;
 import darwinProject.model.maps.EarthMap;
-import darwinProject.presenter.SimulationPresenter;
+import darwinProject.model.maps.WaterMap;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Random;
 
-public class Simulation implements Runnable {
-    private final List<Animal> animals;
-    private final List<Vector2d> animalsPositions;
+
+public class Simulation implements Runnable
+{
     private final AbstractWorldMap world;
-    private Random random = new Random();
-    private final Integer initialNumberOfAnimals;
-    private SimulationPresenter presenter;  // Odwołanie do GUI, by móc aktualizować mapę
+
 
     public Simulation(Integer mapHeight, Integer mapWidth, Integer startingGrassCount,
                       Integer energyFromEatingPlants, Integer numberOfPlantsGrownDaily, Integer initialNumberOfAnimals,
-                      Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations,
-                      Integer maxNumberOfMutations, Integer numberOfGenes, Integer startingEnergy, SimulationPresenter presenter) {
-        // Inicjalizacja mapy, zwierząt itp.
-        this.world = new EarthMap(mapHeight, mapWidth, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
-        this.animals = new ArrayList<>();
-        this.animalsPositions = new ArrayList<>();
-        this.initialNumberOfAnimals = initialNumberOfAnimals;
-        this.presenter = presenter;  // Ustawiamy GUI, by później odświeżać mapę
+                      Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations, Integer numberOfGenes, Integer startingEnergy, AnimalType type, MapType mapType) {
+
+        if (mapType == MapType.EarthMap) {
+            this.world = new EarthMap(mapHeight, mapWidth, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
+        }
+        else {
+            this.world = new WaterMap(mapHeight, mapWidth, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
+        }
+        Random random = new Random();
 
         // Inicjalizowanie zwierząt
         for (int i = 0; i < initialNumberOfAnimals; i++) {
             try {
+
                 Vector2d position = new Vector2d(random.nextInt(mapWidth), random.nextInt(mapHeight));
-                Animal animal = new Animal(position, numberOfGenes, startingEnergy, energyReadyToReproduce,
-                        energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
-                world.place(animal);
-                this.animals.add(animal);
-                this.animalsPositions.add(position);
-            } catch (IncorrectPositionException e) {
+
+                if (type == AnimalType.CrazyAnimal) {
+                    CrazyAnimal animal = new CrazyAnimal(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
+                    world.place(animal);
+                } else {
+                    Animal animal = new Animal(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
+                    world.place(animal);
+                }
+            }
+            catch (IncorrectPositionException e) {
                 System.out.println("Incorrect position " + e.getMessage());
             }
         }
     }
 
-    @Override
-    public void run() {
-        int animalsCount = initialNumberOfAnimals;
+
+    }
+
+    public void run(){
+
         boolean running = true;
-
+        int i = 0;
         while (running) {
-//            System.out.println(animalsCount + " animals");
-            for (int i = 0; i < animalsCount; i++) {
-                // Przemieszczanie zwierząt
-                world.move(animals.get(i));
-            }
+            System.out.println("day " + i);
+            i++;
 
-            // Przykładowo dodanie jedzenia (jeśli masz funkcję dla jedzenia):
-            // TODO: Dodaj funkcje do wyżywienia zwierząt
-            for (Vector2d position : animalsPositions) {
-                // TODO: Logika konsumowania trawy przez zwierzęta
-            }
-
-            // Generowanie nowej trawy
+            world.handleMovement();
+            world.handleDeath();
+            world.eatPlants();
+            world.handlePlantConsumption();
+            world.handleReproduction();
             world.generateNewGrassPositions();
-
-            // Odświeżenie mapy na GUI co sekundę
-            presenter.updateMap();
-
-            try {
-                // Pauza, by proces działał co sekundę
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            // Sprawdzamy warunki końcowe symulacji, np. liczba żywych zwierząt
-            if (animals.isEmpty()) {
-                running = false;  // Kończymy symulację, jeśli nie ma zwierząt
-            }
+//            System.out.println(world);
         }
     }
 
-    public List<Animal> getAnimals() {
-        return List.copyOf(animals);
-    }
-
-    public void kill(Animal animal) {
-        animals.remove(animal); // Usuwamy zwierzę z listy
-    }
-
-    public AbstractWorldMap getWorld() {
+    public AbstractWorldMap getWorldMap() {
         return world;
     }
+
 }
+
