@@ -86,9 +86,9 @@ public class SimulationPresenter implements MapChangeListener {
         mapWidth = xMax - xMin + 1;
         mapHeight = yMax - yMin + 1;
         int mapMaxWidth = 300;
-        cellWidth = Math.round(mapMaxWidth / mapWidth);
+        cellWidth = mapMaxWidth / mapWidth;
         int mapMaxHeight = 300;
-        cellHeight = Math.round(mapMaxHeight / mapHeight);
+        cellHeight = (mapMaxHeight / mapHeight);
         cellHeight = Math.min(cellHeight, cellWidth);
         cellWidth = cellHeight;
     }

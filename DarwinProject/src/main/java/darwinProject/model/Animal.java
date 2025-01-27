@@ -86,17 +86,32 @@ public class Animal implements Comparable<Animal>, WorldElement {
     }
 
 
+//Kod z zastosowaniem pod aplikację
+//    public String toString() {
+//        return switch (this.direction) {
+//            case NORTH -> "↑";        // Zwróć strzałkę w górę (Unicode: \u2191)
+//            case NORTHEAST -> "↗";    // Zwróć strzałkę w górny-prawy róg (Unicode: \u2197)
+//            case EAST -> "→";         // Zwróć strzałkę w prawo (Unicode: \u2192)
+//            case SOUTHEAST -> "↘";    // Zwróć strzałkę w dolny-prawy róg (Unicode: \u2198)
+//            case SOUTH -> "↓";        // Zwróć strzałkę w dół (Unicode: \u2193)
+//            case SOUTHWEST -> "↙";    // Zwróć strzałkę w dolny-lewy róg (Unicode: \u2199)
+//            case WEST -> "←";         // Zwróć strzałkę w lewo (Unicode: \u2190)
+//            case NORTHWEST -> "↖";    // Zwróć strzałkę w górny-lewy róg (Unicode: \u2196)
+//        };
+//    }
 
     public String toString() {
-        String directionSymbol = switch (this.direction) {
-            case NORTH -> "↑";
-            case NORTHEAST -> "↗";
-            case EAST -> "→";
-            case SOUTHEAST -> "↘";
-            case SOUTH -> "↓";
-            case SOUTHWEST -> "↙";
-            case WEST -> "←";
-            case NORTHWEST -> "↖";
+
+        return switch (this.direction) {
+            case NORTH -> "^";
+            case NORTHEAST -> "NE";
+            case EAST -> ">";
+            case SOUTHEAST -> "SE";
+            case SOUTH -> "v";
+            case SOUTHWEST -> "SW";
+            case WEST -> "<";
+            case NORTHWEST -> "NW";
+
         };
 
         Color color = getColorBasedOnEnergy(); // Pobieranie koloru na podstawie energii
@@ -104,6 +119,7 @@ public class Animal implements Comparable<Animal>, WorldElement {
         // Jeśli chcesz, możesz po prostu dołączyć kolory do znaków, ale ostateczne rysowanie musi się odbywać w JavaFX
         return directionSymbol;
     }
+
 
 
 
@@ -116,7 +132,6 @@ public class Animal implements Comparable<Animal>, WorldElement {
             return Color.GREEN;    // Wysoka energia - zielony
         }
     }
-
 
 
     public void move(WorldMap map) {

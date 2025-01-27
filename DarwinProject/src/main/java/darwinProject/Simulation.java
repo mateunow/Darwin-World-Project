@@ -68,7 +68,7 @@ public class Simulation implements Runnable
             world.handlePlantConsumption();
             world.handleReproduction();
             world.generateNewGrassPositions();
-//            System.out.println(world);
+            System.out.println(world);
         }
     }
 

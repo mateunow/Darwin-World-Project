@@ -12,7 +12,7 @@ public class WaterMap extends AbstractWorldMap {
     private final int numberOfWaterTiles;
     private final int width;
     private final int height;
-    private Random random = new Random();
+    private final Random random = new Random();
 
 
     public WaterMap(int height, int width, int startGrassCount, int numberOfPlantsGrownDaily, int energyFromEatingPlant) {
@@ -37,7 +37,10 @@ public class WaterMap extends AbstractWorldMap {
     public void generateNewGrassPositions() {
         super.generateNewGrassPositions();
         if (random.nextBoolean()) {
-
+            spreadRandomWater(random.nextInt(numberOfWaterTiles));
+        }
+        if (random.nextBoolean()) {
+            drySomeWater(random.nextInt(numberOfWaterTiles));
         }
     }
 
@@ -62,7 +65,7 @@ public class WaterMap extends AbstractWorldMap {
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return !waterMap.containsKey(position) || position.precedes(upperRight) || position.follows(lowerLeft);
+        return !waterMap.containsKey(position) && position.precedes(upperRight) && position.follows(lowerLeft);
     }
 
     @Override
@@ -110,17 +113,6 @@ public class WaterMap extends AbstractWorldMap {
         return super.objectAt(position);
     }
 
-    public Set<Vector2d> findFieldsWithoutGrassAndWater() {
-        // Usuwamy pola z wodą od wyników wyszukiwania pustych pól
-        Set<Vector2d> fieldsWithoutGrass = super.findFieldsWithoutGrass();
-        waterMap.keySet().forEach(fieldsWithoutGrass::remove);  // Usuwamy pola zajęte przez wodę
-        return fieldsWithoutGrass;
-    }
-
-    public Map<Vector2d, Water> getWaterMap() {
-        return waterMap;
-    }
-
 
     public void spreadWater(Vector2d waterPosition) {
 
@@ -147,7 +139,7 @@ public class WaterMap extends AbstractWorldMap {
                     SortedSet<Animal> animalsToDelete = animals.get(newPosition);  // Ustalamy datę śmierci
                     for (Animal animal : animalsToDelete) {
                         animal.die();
-                        animals.remove(animal);
+                        animals.remove(animal.getPosition());
                         deadAnimals.add(animal);
                     }
                     notifyObservers("Animal died due to water at " + newPosition);
@@ -190,4 +182,9 @@ public class WaterMap extends AbstractWorldMap {
             notifyObservers("Water at " + waterPosition + " has dried up.");
         }
     }
+
+    public Map<Vector2d, Water> getWaterMap() {
+        return waterMap;
+    }
 }
+
