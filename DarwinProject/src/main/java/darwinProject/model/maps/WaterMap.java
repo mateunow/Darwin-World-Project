@@ -63,7 +63,7 @@ public class WaterMap extends AbstractWorldMap {
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return !waterMap.containsKey(position) || position.precedes(upperRight) || position.follows(lowerLeft);
+        return !waterMap.containsKey(position) && position.precedes(upperRight) && position.follows(lowerLeft);
     }
 
     @Override
@@ -176,5 +176,8 @@ public class WaterMap extends AbstractWorldMap {
             // Powiadamiamy obserwatorów o wyschnięciu wody
             notifyObservers("Water at " + waterPosition + " has dried up.");
         }
+    }
+    public Map<Vector2d, Water> getWaterMap() {
+        return waterMap;
     }
 }
