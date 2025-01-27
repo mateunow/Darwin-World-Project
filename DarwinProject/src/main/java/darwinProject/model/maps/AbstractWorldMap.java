@@ -13,7 +13,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final MapVisualizer mapVisualizer = new MapVisualizer(this);
     protected final Map<Vector2d, SortedSet<Animal>> animals = new HashMap<>();
     protected Map<Vector2d, Grass> grassMap = new HashMap<>();
-    private Set<Vector2d> fieldsWithoutGrass = new HashSet<>();
     List<Animal> livingAnimals = new ArrayList<>();
 
 
@@ -24,16 +23,32 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final int id = this.hashCode();
     protected final Set<Animal> deadAnimals = new HashSet<>();
     private final Integer numberOfPlantsGrownDaily;
-    private final Integer energyFromEatingPlant;;
+    private final Integer energyFromEatingPlant;
+    private final List<Vector2d> preferredFields = new ArrayList<>();
+    private final List<Vector2d> unpreferredFields = new ArrayList<>();
 
     protected AbstractWorldMap(int height, int width, int startGrassCount, int numberOfPlantsGrownDaily, int energyFromEatingPlant) {
-        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(width, height, startGrassCount);
-        for(Vector2d grassPosition : randomPositionGenerator) {
+        int equatorHeight = (int) (height * 0.2); // 20% of map height for the equator zone
+        int equatorStart = (height - equatorHeight) / 2;
+        int equatorEnd = equatorStart + equatorHeight;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Vector2d position = new Vector2d(x, y);
+                if (y >= equatorStart && y <= equatorEnd) {
+                    preferredFields.add(position);
+                } else {
+                    unpreferredFields.add(position);
+                }
+            }
+        }
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(preferredFields, unpreferredFields, startGrassCount);
+        for (Vector2d grassPosition : randomPositionGenerator) {
             grassMap.put(grassPosition, new Grass(grassPosition));
         }
+
+
         this.upperRight = new Vector2d(width - 1,height - 1);
         this.finalBoundary = new Boundary(lowerLeft, upperRight);
-        this.fieldsWithoutGrass = findFieldsWithoutGrass();
         this.numberOfPlantsGrownDaily = numberOfPlantsGrownDaily;
         this.energyFromEatingPlant = energyFromEatingPlant;
     }
@@ -52,11 +67,12 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
+
+
     public void generateNewGrassPositions() {
-        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(new ArrayList<>(fieldsWithoutGrass), numberOfPlantsGrownDaily);
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(preferredFields, unpreferredFields, numberOfPlantsGrownDaily);
         for (Vector2d grassPosition : randomPositionGenerator) {
             grassMap.put(grassPosition, new Grass(grassPosition));
-            fieldsWithoutGrass.remove(grassPosition);
             notifyObservers("New grass added");
         }
     }
@@ -124,19 +140,15 @@ public abstract class AbstractWorldMap implements WorldMap {
                         Animal child = parent1.reproduceWithOtherAnimal(parent2);
                         try {
                             placeAnimal(child, entry.getKey());
-                            System.out.println("ADDED ANIMAL" + child);
                         }
                         catch (Exception e) {
-                            System.out.println("Nie udało się postawić zwierzęcia" + e.getMessage());
+                            System.out.println("Failed to place an animal: " + e.getMessage());
                         }
                     }
                 }
             }
         }
         notifyObservers("Reproduction");
-    }
-    public Grass grassAt(Vector2d position) {
-        return grassMap.get(position);
     }
 
     protected Map<Vector2d, List<Animal>> groupAnimalsByPosition() {
@@ -205,30 +217,17 @@ public abstract class AbstractWorldMap implements WorldMap {
 
                 if (grass != null && !animals.isEmpty()) {
                     animals.sort(new AnimalPriorityComparator());
-                    Animal topAnimal = animals.get(0);  // Sorted in reverse order, so the first is the strongest
+                    Animal topAnimal = animals.getFirst();  // Sorted in reverse order, so the first is the strongest
                     topAnimal.addEnergy(energyFromEatingPlant);
                     grassMap.remove(position);
-                    fieldsWithoutGrass.add(position);
+                    if (preferredFields.contains(position)) {
+                        preferredFields.add(position);
+                    } else if (unpreferredFields.contains(position)) {
+                        unpreferredFields.add(position);
+                    }
                 }
             }
         }
-    }
-
-    public Set<Vector2d> findFieldsWithoutGrass() {
-        Boundary boundary = getCurrentBounds();
-        int width = boundary.upperRight().getY();
-        int height = boundary.upperRight().getX();
-
-        Set<Vector2d> fieldsWithoutGrassSet = new HashSet<>();
-        for (int i = 0; i <= width; i++) {
-            for (int j = 0; j <= height; j++) {
-                Vector2d field = new Vector2d(i, j);
-                if (!grassMap.containsKey(field)) {
-                    fieldsWithoutGrassSet.add(field);
-                }
-            }
-        }
-        return fieldsWithoutGrassSet;
     }
 
     @Override
@@ -249,11 +248,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
         elements.addAll(grassMap.values());
         return elements;
-    }
-
-
-    public boolean isGrassAt(Vector2d position) {
-        return grassMap.containsKey(position);
     }
 
     public String toString() {

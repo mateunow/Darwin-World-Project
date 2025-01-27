@@ -52,23 +52,21 @@ public class SimulationSettingsWindow {
     private Label errorMessageLabel;
 
     @FXML
-    private ComboBox<AnimalType> animalTypeComboBox;  // Updated ComboBox for animal type
+    private ComboBox<AnimalType> animalTypeComboBox;
     @FXML
-    private ComboBox<MapType> mapTypeComboBox;  // ComboBox for map type
+    private ComboBox<MapType> mapTypeComboBox;
 
-    // Method to initialize the form
     @FXML
     public void initialize() {
-        errorMessageLabel.setText(""); // Hide errors initially
+        errorMessageLabel.setText("");
 
-        // Initialize ComboBoxes with the enum values
-        animalTypeComboBox.getItems().setAll(AnimalType.values());  // Updated enum
+
+        animalTypeComboBox.getItems().setAll(AnimalType.values());
         mapTypeComboBox.getItems().setAll(MapType.values());
     }
 
     public SimulationData getSimulationData() {
         try {
-            // Get values from all the fields
             int mapWidth = Integer.parseInt(mapWidthField.getText());
             int mapHeight = Integer.parseInt(mapHeightField.getText());
             int numAnimals = Integer.parseInt(numAnimalsField.getText());
@@ -82,31 +80,25 @@ public class SimulationSettingsWindow {
             int maxNumberOfMutations = Integer.parseInt(maxNumberOfMutationsField.getText());
             int numberOfGenes = Integer.parseInt(numberOfGenesField.getText());
 
-            // Get selected values for animal and map types
             AnimalType selectedAnimalType = animalTypeComboBox.getValue();
             MapType selectedMapType = mapTypeComboBox.getValue();
 
-            // Return a new SimulationData object
             return new SimulationData(
                     mapWidth, mapHeight, numAnimals, startingGrassCount, energyFromEatingPlants,
                     numberOfPlantsGrownDaily, startingEnergy, energyReadyToReproduce, energyToReproduce,
                     minNumberOfMutations, maxNumberOfMutations, numberOfGenes, selectedAnimalType, selectedMapType
             );
         } catch (NumberFormatException e) {
-            // Handle invalid input (e.g., show error message)
-            return null; // You could show a dialog here to indicate failure
+            return null;
         }
     }
-    // Method to start the simulation based on user input
     @FXML
     private void onStartSimulation() {
         try {
-            // Get values from all the fields
             int mapWidth = Integer.parseInt(mapWidthField.getText());
             int mapHeight = Integer.parseInt(mapHeightField.getText());
             int numAnimals = Integer.parseInt(numAnimalsField.getText());
 
-            // New parameters related to plants and animals
             int startingGrassCount = Integer.parseInt(startingGrassCountField.getText());
             int energyFromEatingPlants = Integer.parseInt(energyFromEatingPlantsField.getText());
             int numberOfPlantsGrownDaily = Integer.parseInt(numberOfPlantsGrownDailyField.getText());
@@ -117,11 +109,9 @@ public class SimulationSettingsWindow {
             int maxNumberOfMutations = Integer.parseInt(maxNumberOfMutationsField.getText());
             int numberOfGenes = Integer.parseInt(numberOfGenesField.getText());
 
-            // Get the selected animal and map types
-            AnimalType selectedAnimalType = animalTypeComboBox.getValue();  // Updated enum reference
+            AnimalType selectedAnimalType = animalTypeComboBox.getValue();
             MapType selectedMapType = mapTypeComboBox.getValue();
 
-            // Check that values are within valid ranges
             if (mapWidth < 1 || mapWidth > 10001 || mapHeight < 1 || mapHeight > 10001 ||
                     numAnimals < 1 || numAnimals > 10001 ||
                     startingGrassCount < 1 || startingGrassCount > 10001 || energyFromEatingPlants < 1 || energyFromEatingPlants > 10001 ||
@@ -133,7 +123,6 @@ public class SimulationSettingsWindow {
                 return;
             }
 
-            // Start a new simulation window with selected animal and map types
             startNewSimulationWindow(mapWidth, mapHeight, numAnimals, startingGrassCount, energyFromEatingPlants,
                     numberOfPlantsGrownDaily, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations,
                     maxNumberOfMutations, numberOfGenes, selectedAnimalType, selectedMapType);
@@ -143,7 +132,6 @@ public class SimulationSettingsWindow {
         }
     }
 
-    // Create a new simulation window with the given parameters
     private void startNewSimulationWindow(int mapWidth, int mapHeight, int numAnimals,
                                           int startingGrassCount, int energyFromEatingPlants, int numberOfPlantsGrownDaily,
                                           int startingEnergy, int energyReadyToReproduce, int energyToReproduce,
@@ -156,27 +144,22 @@ public class SimulationSettingsWindow {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/simulation.fxml"));
             BorderPane newRoot = loader.load();
 
-            // Get the controller to pass simulation parameters
             SimulationPresenter presenter = loader.getController();
 
-            // Create and configure the simulation
             Simulation simulation = new Simulation(
                     mapHeight, mapWidth, startingGrassCount, energyFromEatingPlants, numberOfPlantsGrownDaily,
                     numAnimals, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations,
                     numberOfGenes, startingEnergy, animalType, mapType);
 
-            // Assign the world map and simulation to the presenter
             presenter.setWorldMap(simulation.getWorldMap());
             presenter.simulation = simulation;
 
-            // Initialize the simulation engine
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
             presenter.engine = engine;
 
-            // Start the simulation engine asynchronously
+
             new Thread(() -> engine.runAsync()).start();
 
-            // Show the simulation UI
             Scene scene = new Scene(newRoot);
             newStage.setScene(scene);
             newStage.show();

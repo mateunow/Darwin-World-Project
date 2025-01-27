@@ -55,14 +55,13 @@ public class Simulation implements Runnable
         while (running) {
             System.out.println("day " + i);
             i++;
-//TODO dodaj warunek zakończenia pętli
             world.handleMovement();
             world.handleDeath();
             world.eatPlants();
             world.handlePlantConsumption();
             world.handleReproduction();
             world.generateNewGrassPositions();
-//            System.out.println(world);
+            System.out.println(world);
         }
     }
 
