@@ -39,6 +39,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
         for (int i = 0; i < Math.min(grassCount, availablePositions.size()); i++) {
             positions.add(availablePositions.get(i));
         }
+
     }
 
     private void generatePreferredAndNotPreferredPositions(List<Vector2d> preferredPositions, List<Vector2d> nonPreferredPositions, int grassCount) {

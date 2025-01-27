@@ -10,7 +10,9 @@ import darwinProject.exceptions.IncorrectPositionException;
 import darwinProject.model.maps.EarthMap;
 import darwinProject.model.maps.WaterMap;
 
+
 import java.util.Random;
+
 
 public class Simulation implements Runnable
 {
@@ -29,10 +31,12 @@ public class Simulation implements Runnable
         }
         Random random = new Random();
 
-        for (int i=0; i<initialNumberOfAnimals; i++) {
+        // Inicjalizowanie zwierząt
+        for (int i = 0; i < initialNumberOfAnimals; i++) {
             try {
 
                 Vector2d position = new Vector2d(random.nextInt(mapWidth), random.nextInt(mapHeight));
+
                 if (type == AnimalType.CrazyAnimal) {
                     CrazyAnimal animal = new CrazyAnimal(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
                     world.place(animal);
@@ -45,6 +49,8 @@ public class Simulation implements Runnable
                 System.out.println("Incorrect position " + e.getMessage());
             }
         }
+    }
+
 
     }
 
@@ -55,6 +61,7 @@ public class Simulation implements Runnable
         while (running) {
             System.out.println("day " + i);
             i++;
+
             world.handleMovement();
             world.handleDeath();
             world.eatPlants();

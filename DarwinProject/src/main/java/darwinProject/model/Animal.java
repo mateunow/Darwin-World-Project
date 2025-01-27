@@ -7,6 +7,7 @@ import darwinProject.model.util.Boundary;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
+import javafx.scene.paint.Color;
 
 public class Animal implements Comparable<Animal>, WorldElement {
     protected MapDirection direction;
@@ -100,6 +101,7 @@ public class Animal implements Comparable<Animal>, WorldElement {
 //    }
 
     public String toString() {
+
         return switch (this.direction) {
             case NORTH -> "^";
             case NORTHEAST -> "NE";
@@ -109,8 +111,28 @@ public class Animal implements Comparable<Animal>, WorldElement {
             case SOUTHWEST -> "SW";
             case WEST -> "<";
             case NORTHWEST -> "NW";
+
         };
+
+        Color color = getColorBasedOnEnergy(); // Pobieranie koloru na podstawie energii
+
+        // Jeśli chcesz, możesz po prostu dołączyć kolory do znaków, ale ostateczne rysowanie musi się odbywać w JavaFX
+        return directionSymbol;
     }
+
+
+
+
+    public Color getColorBasedOnEnergy() {
+        if (this.energy < 20) {
+            return Color.RED;      // Niska energia - czerwony
+        } else if (this.energy < 50) {
+            return Color.ORANGE;   // Średnia energia - pomarańczowy
+        } else {
+            return Color.GREEN;    // Wysoka energia - zielony
+        }
+    }
+
 
     public void move(WorldMap map) {
         reduceEnergy(20);
@@ -233,7 +255,7 @@ public class Animal implements Comparable<Animal>, WorldElement {
         return this.childrenCount;
     }
 
-    public int getDaysLived() {
+    public int getAge() {
         return this.daysLived;
     }
 

@@ -32,14 +32,13 @@ public class SimulationPresenter implements MapChangeListener {
     private int mapWidth;
     private int mapHeight;
 
+    private WorldMap map;
+    private int xMin, yMin, xMax, yMax, mapWidth, mapHeight;
     private int cellWidth = 50;
     private int cellHeight = 50;
-
-    // Set the world map
     public void setWorldMap(WorldMap map) {
         this.map = map;
         map.registerObservers(this);
-
         drawMap();
     }
     public void startSimulation(){
@@ -61,12 +60,12 @@ public class SimulationPresenter implements MapChangeListener {
                 // Update the UI
                 int finalI = i;
                 Platform.runLater(() -> {
-                    mapChanged(simulation.getWorldMap(), "Day " + finalI); // Assuming the message you want to show on the label is the day number
+                    mapChanged(simulation.getWorldMap(), "Day " + finalI);
                 });
 
                 try {
-                    // Introduce a small delay to simulate the passage of time (and avoid freezing the UI)
-                    Thread.sleep(1000);  // 1 second delay, adjust as needed
+                  
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -74,7 +73,8 @@ public class SimulationPresenter implements MapChangeListener {
         }).start();
     }
 
-    // Update map boundaries based on the map data
+    
+
     public void updateBounds() {
         Boundary boundary = map.getCurrentBounds();
         Vector2d lowerLeft = boundary.lowerLeft();
@@ -93,7 +93,6 @@ public class SimulationPresenter implements MapChangeListener {
         cellWidth = cellHeight;
     }
 
-    // Set the column function to populate columns in the GridPane
     public void columnsFunction() {
         for (int i = 0; i < mapWidth; i++) {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(cellWidth));
@@ -105,11 +104,12 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    // Set the row function to populate rows in the GridPane
+
     public void rowsFunction() {
         for (int i = 0; i < mapHeight; i++) {
             mapGrid.getRowConstraints().add(new RowConstraints(cellHeight));
         }
+
 
         // Wrap the UI update code inside Platform.runLater
         Platform.runLater(() -> {
@@ -139,7 +139,7 @@ public class SimulationPresenter implements MapChangeListener {
                         label = new Label(" ");
                     }
                     mapGrid.add(label, finalI - xMin + 1, yMax - finalJ + 1);
-                    mapGrid.setHalignment(label, HPos.CENTER);  // Set the label's alignment to center
+                    mapGrid.setHalignment(label, HPos.CENTER); 
                 });
             }
         }
@@ -147,7 +147,7 @@ public class SimulationPresenter implements MapChangeListener {
 
 
 
-    // Draw the map with the updated elements and grid layout
+    
     private void drawMap() {
         updateBounds();
         columnsFunction();
@@ -156,14 +156,25 @@ public class SimulationPresenter implements MapChangeListener {
         mapGrid.setGridLinesVisible(true);
     }
 
-    // Clear the grid before redrawing
+
+    // Funkcja do wyświetlenia współrzędnych
+    private void xyLabel() {
+        mapGrid.getColumnConstraints().add(new ColumnConstraints(cellWidth));
+        mapGrid.getRowConstraints().add(new RowConstraints(cellHeight));
+        Label label = new Label("y/x");
+        mapGrid.add(label, 0, 0);
+        GridPane.setHalignment(label, HPos.CENTER);
+    }
+
+    // Funkcja czyszcząca grid przed rysowaniem nowego widoku
     private void clearGrid() {
-        mapGrid.getChildren().retainAll(mapGrid.getChildren().getFirst());
+        mapGrid.getChildren().clear();
+
         mapGrid.getColumnConstraints().clear();
         mapGrid.getRowConstraints().clear();
     }
 
-    // Event triggered when the map changes
+
     @Override
     public void mapChanged(WorldMap worldMap, String message) {
         setWorldMap(worldMap);  // Update the map reference
@@ -178,6 +189,55 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
 
+    // Metoda wywołująca updateMap z Simulation co sekundę
+    public void updateMap() {
+        Platform.runLater(() -> {
+            clearGrid();
+            drawMap();  // Rysowanie mapy
+        });
+    }
+
+    // Uruchomienie nowego okna symulacji
+    public void startSimulation() {
+        String moveList = moveListTextField.getText();
+        List<Vector2d> positions = List.of(new Vector2d(1, 2), new Vector2d(3, 4));
+
+        // Tworzymy nowe okno
+        Stage newStage = new Stage();
+        newStage.setTitle("Simulation Window");
+
+        try {
+            // Ładujemy FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("okno.fxml"));
+            BorderPane newRoot = loader.load();
+
+            // Pobieramy kontroler
+            SimulationPresenter newPresenter = loader.getController();
+            AbstractWorldMap map = new EarthMap(100, 100, 10, 2, 20);
+            map.registerObservers(newPresenter);
+            newPresenter.setWorldMap(map);
+
+            // Tworzymy i uruchamiamy symulację
+            Simulation simulation = new Simulation(100, 100, 20, 20, 5, 5, 50, 20, 0, 3, 7, 50, newPresenter);
+            SimulationEngine engine = new SimulationEngine(List.of(simulation));
+            newPresenter.moveDescriptionLabel.setText("Simulation started with moves: " + moveList);
+
+            new Thread(engine::runSync).start();
+
+            // Ustawienie interwału dla odświeżania mapy
+            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+                newPresenter.updateMap(); // Co sekundę wywołujemy metodę aktualizacji
+            }, 0, 1, TimeUnit.SECONDS); // Opóźnienie 0, interwał 1 sekunda
+
+            // Pokazujemy nowe okno
+            Scene scene = new Scene(newRoot);
+            newStage.setScene(scene);
+            newStage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
 

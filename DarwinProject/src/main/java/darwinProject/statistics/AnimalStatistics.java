@@ -34,10 +34,10 @@ public class AnimalStatistics {
     }
 
     public int getAge() {
-        return animal.getDaysLived();
+        return animal.getAge();
     }
 
     public String getDeathDay() {
-        return animal.getDaysLived() > 0 ? String.valueOf(animal.getDaysLived()) : "Alive";
+        return animal.getAge() > 0 ? String.valueOf(animal.getAge()) : "Alive";
     }
 }

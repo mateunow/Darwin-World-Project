@@ -1,9 +1,11 @@
 package darwinProject.presenter;
 
+import darwinProject.Simulation;
 import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
-import darwinProject.model.maps.EarthMap;
 import darwinProject.model.Vector2d;
+import darwinProject.model.maps.EarthMap;
+import darwinProject.statistics.SimulationStatistics;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +16,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+
 public class SimulationApp extends Application {
 
     private SimulationSettingsWindow settingsWindow;
@@ -47,6 +53,7 @@ public class SimulationApp extends Application {
             }
         });
     }
+
 
     private void startSimulation(Stage primaryStage, SimulationData data) throws IOException {
         // Create a map with the received data
@@ -82,11 +89,32 @@ public class SimulationApp extends Application {
         BorderPane viewRoot = loader.load();
         presenter = loader.getController();
 
+
+        // Uruchomienie symulacji
+        startSimulation(map, presenter);
+
+        // Uruchomienie okna statystyk
+        SimulationStatistics stats = new SimulationStatistics(map);
+        stats.showStatisticsWindow();
+
+        // Konfiguracja sceny z załadowaniem arkusza stylów CSS
+
         var scene = new Scene(viewRoot);
         scene.getStylesheets().add(getClass().getClassLoader().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);
 
         primaryStage.setTitle("Simulation app");
         primaryStage.show();
+    }
+
+    private void startSimulation(AbstractWorldMap map, SimulationPresenter presenter) {
+        // Tworzymy symulację
+        Simulation simulation = new Simulation(10, 10, 3, 2, 20, 20, 50, 30, 0, 3, 7, 50, presenter);
+        SimulationEngine engine = new SimulationEngine(List.of(simulation));
+
+        // Uruchamiamy symulację asynchronicznie
+        new Thread(() -> {
+            engine.runAsync(); // Uruchomienie symulacji w tle
+        }).start();
     }
 }
