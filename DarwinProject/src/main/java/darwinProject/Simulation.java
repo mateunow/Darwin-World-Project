@@ -1,9 +1,8 @@
 package darwinProject;
 
-import darwinProject.enums.AnimalTypes;
+import darwinProject.enums.AnimalType;
 import darwinProject.enums.MapType;
 import darwinProject.model.CrazyAnimal;
-import darwinProject.model.Water;
 import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
 import darwinProject.model.Vector2d;
@@ -20,7 +19,7 @@ public class Simulation implements Runnable
 
     public Simulation(Integer mapHeight, Integer mapWidth, Integer startingGrassCount,
                       Integer energyFromEatingPlants, Integer numberOfPlantsGrownDaily, Integer initialNumberOfAnimals,
-                      Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations, Integer numberOfGenes, Integer startingEnergy, AnimalTypes type, MapType mapType) {
+                      Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations, Integer numberOfGenes, Integer startingEnergy, AnimalType type, MapType mapType) {
 
         //TODO ADD MAP TYPE
         if (mapType == MapType.EarthMap) {
@@ -35,7 +34,7 @@ public class Simulation implements Runnable
             try {
 
                 Vector2d position = new Vector2d(random.nextInt(mapWidth), random.nextInt(mapHeight));
-                if (type == AnimalTypes.CrazyAnimal) {
+                if (type == AnimalType.CrazyAnimal) {
                     CrazyAnimal animal = new CrazyAnimal(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
                     world.place(animal);
                 } else {

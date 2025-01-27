@@ -24,12 +24,6 @@
         </HBox>
 
         <HBox spacing="10">
-            <Label text="Liczba kroków:"/>
-            <TextField fx:id="numMovesField" promptText="Wprowadź liczbę kroków"/>
-        </HBox>
-
-        <!-- New Fields for Additional Settings -->
-        <HBox spacing="10">
             <Label text="Liczba roślin startowych:"/>
             <TextField fx:id="startingGrassCountField" promptText="Wprowadź liczbę roślin startowych"/>
         </HBox>
@@ -72,6 +66,17 @@
         <HBox spacing="10">
             <Label text="Liczba genów:"/>
             <TextField fx:id="numberOfGenesField" promptText="Wprowadź liczbę genów"/>
+        </HBox>
+
+        <!-- Add ComboBoxes for Animal and Map types -->
+        <HBox spacing="10">
+            <Label text="Typ zwierzęcia:"/>
+            <ComboBox fx:id="animalTypeComboBox" promptText="Wybierz typ zwierzęcia"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Typ mapy:"/>
+            <ComboBox fx:id="mapTypeComboBox" promptText="Wybierz typ mapy"/>
         </HBox>
 
         <Label fx:id="errorMessageLabel" style="-fx-text-fill: red;"/>
