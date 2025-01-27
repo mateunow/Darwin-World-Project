@@ -40,6 +40,7 @@ public class WaterMap extends AbstractWorldMap {
 
         }
     }
+
     public void spreadRandomWater(int numberOfSpreadingTiles) {
         List<Vector2d> waterPositions = new ArrayList<>(waterMap.keySet());
 
@@ -57,6 +58,7 @@ public class WaterMap extends AbstractWorldMap {
         }
         notifyObservers(tilesToSpread + " random water tiles spread their water.");
     }
+
 
     @Override
     public boolean canMoveTo(Vector2d position) {
@@ -132,6 +134,7 @@ public class WaterMap extends AbstractWorldMap {
         for (Vector2d direction : directions) {
             Vector2d newPosition = waterPosition.add(direction);
 
+
                 // Sprawdzamy, czy pole już nie ma wody
                 if (waterMap.containsKey(newPosition)) {
                     continue;  // Jeśli już jest woda, przechodzimy do następnego kierunku
@@ -149,16 +152,18 @@ public class WaterMap extends AbstractWorldMap {
                     }
                     notifyObservers("Animal died due to water at " + newPosition);
                 }
+               
+            }
 
-                // Jeśli jest trawa, usuwamy ją
-                if (grassMap.containsKey(newPosition)) {
-                    grassMap.remove(newPosition);  // Trawa umiera
-                    notifyObservers("Grass died due to water at " + newPosition);
-                }
+            // Jeśli jest trawa, usuwamy ją
+            if (grassMap.containsKey(newPosition)) {
+                grassMap.remove(newPosition);  // Trawa umiera
+                notifyObservers("Grass died due to water at " + newPosition);
+            }
 
-                // Dodajemy wodę w tym miejscu
-                waterMap.put(newPosition, new Water(newPosition));
-                notifyObservers("Water spread to " + newPosition);
+            // Dodajemy wodę w tym miejscu
+            waterMap.put(newPosition, new Water(newPosition));
+            notifyObservers("Water spread to " + newPosition);
 
         }
     }

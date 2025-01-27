@@ -159,6 +159,7 @@ public class SimulationSettingsWindow {
             // Get the controller to pass simulation parameters
             SimulationPresenter presenter = loader.getController();
 
+
             // Create and configure the simulation
             Simulation simulation = new Simulation(
                     mapHeight, mapWidth, startingGrassCount, energyFromEatingPlants, numberOfPlantsGrownDaily,
