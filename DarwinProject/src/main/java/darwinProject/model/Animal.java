@@ -4,7 +4,6 @@ import darwinProject.enums.MapDirection;
 import darwinProject.model.maps.WorldMap;
 import darwinProject.model.util.Boundary;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;

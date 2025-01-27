@@ -61,11 +61,14 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
     public void handleMovement() {
-        List<Animal> deadAnimalsToRemove = new ArrayList<>();
-        System.out.println(livingAnimals.size());
         for (Animal animal : livingAnimals) {
             this.move(animal);
+        }
+    }
 
+    public void handleDeath() {
+        List<Animal> deadAnimalsToRemove = new ArrayList<>();
+        for (Animal animal : livingAnimals) {
             if (animal.isDead()) {
                 deadAnimals.add(animal);
                 deadAnimalsToRemove.add(animal);
@@ -82,6 +85,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         livingAnimals.removeAll(deadAnimalsToRemove);
         notifyObservers("Living animals moved, dead ones removed");
     }
+
 
 
     public void handlePlantConsumption() {

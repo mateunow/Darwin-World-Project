@@ -21,7 +21,6 @@ public class Simulation implements Runnable
                       Integer energyFromEatingPlants, Integer numberOfPlantsGrownDaily, Integer initialNumberOfAnimals,
                       Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations, Integer numberOfGenes, Integer startingEnergy, AnimalType type, MapType mapType) {
 
-        //TODO ADD MAP TYPE
         if (mapType == MapType.EarthMap) {
             this.world = new EarthMap(mapHeight, mapWidth, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
         }
@@ -58,6 +57,7 @@ public class Simulation implements Runnable
             i++;
 //TODO dodaj warunek zakończenia pętli
             world.handleMovement();
+            world.handleDeath();
             world.eatPlants();
             world.handlePlantConsumption();
             world.handleReproduction();
