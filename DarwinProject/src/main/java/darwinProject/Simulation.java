@@ -57,21 +57,17 @@ public class Simulation implements Runnable
             System.out.println("day " + i);
             i++;
 //TODO dodaj warunek zakończenia pętli
-//
             world.handleMovement();
             world.eatPlants();
             world.handlePlantConsumption();
             world.handleReproduction();
             world.generateNewGrassPositions();
 //            System.out.println(world);
-//            try {
-//                Thread.sleep(2000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-
-
         }
+    }
+
+    public AbstractWorldMap getWorldMap() {
+        return world;
     }
 
 }

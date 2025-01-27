@@ -16,6 +16,7 @@ public class WorldGUI {
 //}
 
 
+
     public static void main(String[] args) {
         Application.launch(SimulationSettingsApp.class, args);  // Uruchomienie aplikacji z oknem formularza
     }

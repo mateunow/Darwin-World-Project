@@ -1,12 +1,8 @@
 package darwinProject.model;
 
-import darwinProject.enums.MapDirection;
-
 import java.util.ArrayList;
 
 public class CrazyAnimal extends Animal {
-    //TODO tego private finala usunąć może jakoś do animala
-
     public CrazyAnimal(Vector2d position, Integer numberOfGenes, Integer startingEnergy, Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations) {
         super(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
     }

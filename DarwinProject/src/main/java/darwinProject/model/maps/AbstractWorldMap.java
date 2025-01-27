@@ -57,6 +57,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         for (Vector2d grassPosition : randomPositionGenerator) {
             grassMap.put(grassPosition, new Grass(grassPosition));
             fieldsWithoutGrass.remove(grassPosition);
+            notifyObservers("New grass added");
         }
     }
     public void handleMovement() {
@@ -79,6 +80,7 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
         }
         livingAnimals.removeAll(deadAnimalsToRemove);
+        notifyObservers("Living animals moved, dead ones removed");
     }
 
 
@@ -103,6 +105,7 @@ public abstract class AbstractWorldMap implements WorldMap {
                 grassMap.remove(position);
             }
         }
+        notifyObservers("Plants eaten");
     }
 
 
@@ -131,8 +134,11 @@ public abstract class AbstractWorldMap implements WorldMap {
                 }
             }
         }
+        notifyObservers("Reproduction");
     }
-
+    public Grass grassAt(Vector2d position) {
+        return grassMap.get(position);
+    }
 
     protected Map<Vector2d, List<Animal>> groupAnimalsByPosition() {
         Map<Vector2d, List<Animal>> grouped = new HashMap<>();
