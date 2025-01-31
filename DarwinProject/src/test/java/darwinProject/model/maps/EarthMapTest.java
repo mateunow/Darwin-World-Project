@@ -13,12 +13,12 @@ class EarthMapTest {
 
     @Test
     public void testStartingMap() {
-        EarthMap map = new EarthMap(10, 10, 15,2,20);
-        Animal animal = new Animal(new Vector2d(1,1), 7, 50, 30, 20, 0, 3);
-        Animal animal2 = new Animal(new Vector2d(3,3), 7, 50, 30, 20, 0, 3);
-        Animal animal3 = new Animal(new Vector2d(8,9), 7, 50, 30, 20, 0, 3);
-        Animal animal4 = new Animal(new Vector2d(9,8), 7, 50, 30, 20, 0, 3);
-        Animal animal5 = new Animal(new Vector2d(9,9), 7, 50, 30, 20, 0, 3);
+        EarthMap map = new EarthMap(10, 10, 15, 2, 20);
+        Animal animal = new Animal(new Vector2d(1, 1), 7, 50, 30, 20, 0, 3);
+        Animal animal2 = new Animal(new Vector2d(3, 3), 7, 50, 30, 20, 0, 3);
+        Animal animal3 = new Animal(new Vector2d(8, 9), 7, 50, 30, 20, 0, 3);
+        Animal animal4 = new Animal(new Vector2d(9, 8), 7, 50, 30, 20, 0, 3);
+        Animal animal5 = new Animal(new Vector2d(9, 9), 7, 50, 30, 20, 0, 3);
 
         //when
         assertDoesNotThrow(() -> map.place(animal));
@@ -29,7 +29,7 @@ class EarthMapTest {
 //        assertThrows(IncorrectPositionException.class, () -> {map.place(animal2);});
         System.out.println(map);
 
-        for (int i= 0; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             map.move(animal);
             map.move(animal2);
             map.move(animal3);
@@ -38,6 +38,7 @@ class EarthMapTest {
             System.out.println(map);
         }
     }
+
     @Test
     void canMoveTo() {
     }
@@ -45,7 +46,7 @@ class EarthMapTest {
     @Test
     public void testObjectAt() {
         //given
-        EarthMap earthMap = new EarthMap(16, 16, 10,2,20);
+        EarthMap earthMap = new EarthMap(16, 16, 10, 2, 20);
         Vector2d grassPosition = earthMap.getElements().stream()
                 .filter(element -> element instanceof Grass)
                 .map(WorldElement::getPosition)
@@ -68,22 +69,26 @@ class EarthMapTest {
     @Test
     public void testPlaceAnimalOnCorrectAndIncorrectPosition() {
         //given
-        EarthMap grassField = new EarthMap(40, 40, 10,2,20);
+        EarthMap grassField = new EarthMap(40, 40, 10, 2, 20);
         Vector2d position = new Vector2d(1, 1);
         Animal animal0 = new Animal(position, 7, 50, 30, 20, 0, 3);
 
         //then
-        assertDoesNotThrow(() -> {grassField.place(animal0);});
+        assertDoesNotThrow(() -> {
+            grassField.place(animal0);
+        });
 
 
         assertEquals(animal0, grassField.objectAt(position));
 
-        Animal animal1 = new Animal(new Vector2d(30,11), 7, 50, 30, 20, 0, 3);
-        Animal animal2 = new Animal(new Vector2d(50,51), 7, 50, 30, 20, 0, 3);
+        Animal animal1 = new Animal(new Vector2d(30, 11), 7, 50, 30, 20, 0, 3);
+        Animal animal2 = new Animal(new Vector2d(50, 51), 7, 50, 30, 20, 0, 3);
         //then
-        assertDoesNotThrow(() -> {grassField.place(animal1);});
+        assertDoesNotThrow(() -> {
+            grassField.place(animal1);
+        });
         assertThrows(IncorrectPositionException.class, () -> grassField.place(animal2));
-        assertEquals(animal1, grassField.objectAt(new Vector2d(30,11)));
+        assertEquals(animal1, grassField.objectAt(new Vector2d(30, 11)));
     }
 
 }

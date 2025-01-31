@@ -6,6 +6,7 @@ import darwinProject.model.Vector2d;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class AbstractWorldMapTest {
 
     @Test
@@ -26,16 +27,15 @@ class AbstractWorldMapTest {
 
     @Test
     void groupAnimalsByPositionAndFightForFood() {
-        EarthMap map = new EarthMap(1,1,1,1,20);
-        Animal animal1 = new Animal(new Vector2d(0,0), 7,50,5,1,0,3);
-        Animal animal2 = new Animal(new Vector2d(0,0), 7,50,5,1,0,3);
-        Animal animal3 = new Animal(new Vector2d(0,0), 7,50,5,1,0,3);
-        try{
-        map.place(animal1);
-        map.place(animal3);
-        map.place(animal2);}
-
-        catch (IncorrectPositionException e) {
+        EarthMap map = new EarthMap(1, 1, 1, 1, 20);
+        Animal animal1 = new Animal(new Vector2d(0, 0), 7, 50, 5, 1, 0, 3);
+        Animal animal2 = new Animal(new Vector2d(0, 0), 7, 50, 5, 1, 0, 3);
+        Animal animal3 = new Animal(new Vector2d(0, 0), 7, 50, 5, 1, 0, 3);
+        try {
+            map.place(animal1);
+            map.place(animal3);
+            map.place(animal2);
+        } catch (IncorrectPositionException e) {
             e.getMessage();
         }
         assertEquals(150, animal1.getEnergy() + animal2.getEnergy() + animal3.getEnergy());
@@ -44,11 +44,10 @@ class AbstractWorldMapTest {
         map.handlePlantConsumption();
         assertEquals(110, animal1.getEnergy() + animal2.getEnergy() + animal3.getEnergy());
 
-        Animal animal4 = new Animal(new Vector2d(0,0), 7,50,5,1,0,3);
-        try{
+        Animal animal4 = new Animal(new Vector2d(0, 0), 7, 50, 5, 1, 0, 3);
+        try {
             map.place(animal4);
-        }
-        catch (IncorrectPositionException e) {
+        } catch (IncorrectPositionException e) {
             e.getMessage();
         }
 

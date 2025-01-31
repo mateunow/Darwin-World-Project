@@ -9,23 +9,23 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class SimulationEngine{
+public class SimulationEngine {
     private final List<Simulation> simulations;
     private final List<Thread> threads = new ArrayList<>();
     private final ExecutorService executor = Executors.newFixedThreadPool(4);
 
 
-    public SimulationEngine(List<Simulation> simulations)
-    {
+    public SimulationEngine(List<Simulation> simulations) {
         this.simulations = simulations;
     }
 
-    public void runSync(){
+    public void runSync() {
         for (Simulation simulation : simulations) {
             simulation.run();
         }
     }
-    public void runAsync(){
+
+    public void runAsync() {
         for (Simulation simulation : simulations) {
             Thread simulationRun = new Thread(simulation);
             threads.add(simulationRun);
@@ -35,7 +35,7 @@ public class SimulationEngine{
     }
 
 
-    public void runAsyncInThreadPool(){
+    public void runAsyncInThreadPool() {
         for (Simulation simulation : simulations) {
             executor.submit(simulation);
         }
@@ -48,13 +48,12 @@ public class SimulationEngine{
                 thread.join();
             }
             executor.shutdown();
-            if (!executor.awaitTermination(10, TimeUnit.SECONDS)){
+            if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
                 executor.shutdownNow();
             }
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             System.out.println(e.getMessage());
         }
     }
-    }
+}
 

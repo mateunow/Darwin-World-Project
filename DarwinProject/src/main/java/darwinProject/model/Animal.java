@@ -7,6 +7,7 @@ import darwinProject.model.util.Boundary;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
+
 import javafx.scene.paint.Color;
 
 public class Animal implements Comparable<Animal>, WorldElement {
@@ -14,8 +15,8 @@ public class Animal implements Comparable<Animal>, WorldElement {
     private Vector2d position;
     protected int energy;
     protected final int maxGene = 7;
-    private final ArrayList<Integer> genome;
-    public int currentGene;
+    private final ArrayList<Integer> genome; // nie przydałaby się klasa na to?
+    public int currentGene; // publiczny modyfikowalny atrybut?
     private int daysLived = 0;
     private int plantsEaten;
     private int dayOfDeath;
@@ -23,7 +24,7 @@ public class Animal implements Comparable<Animal>, WorldElement {
     private final Animal secondParent;
     private int offspringCount = 0;
     protected int childrenCount = 0;
-    protected final Random rand = new Random();
+    protected final Random rand = new Random(); // static?
     protected final Integer energyReadyToReproduce;
     protected final Integer energyToReproduce;
     protected final Integer minNumberOfMutations;
@@ -31,7 +32,7 @@ public class Animal implements Comparable<Animal>, WorldElement {
     protected final int numberOfGenes;
 
 
-    public Animal(Vector2d position, Integer numberOfGenes, Integer startingEnergy, Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations){
+    public Animal(Vector2d position, Integer numberOfGenes, Integer startingEnergy, Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations) {
         //initial animal
         this.position = position;
         this.energy = startingEnergy;
@@ -50,9 +51,9 @@ public class Animal implements Comparable<Animal>, WorldElement {
         this.maxNumberOfMutations = maxNumberOfMutations;
     }
 
-    public Animal(Vector2d position, ArrayList<Integer> genome,  Integer energy, Animal firstParent, Animal secondParent, Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations){
+    public Animal(Vector2d position, ArrayList<Integer> genome, Integer energy, Animal firstParent, Animal secondParent, Integer energyReadyToReproduce, Integer energyToReproduce, Integer minNumberOfMutations, Integer maxNumberOfMutations) {
         //child animal born after the simulation started
-        this.position = position;
+        this.position = position; // dziwnie znajomo wygląda ten konstruktor
         this.energy = energy;
         this.genome = genome;
         this.numberOfGenes = genome.size();
@@ -76,11 +77,11 @@ public class Animal implements Comparable<Animal>, WorldElement {
             return Integer.compare(other.daysLived, this.daysLived);
         }
         if (this.childrenCount != other.childrenCount) {
-            return Integer.compare(other.childrenCount, this.childrenCount);}
-        if(rand.nextInt(2) == 0 ) {
-            return -1;
+            return Integer.compare(other.childrenCount, this.childrenCount);
         }
-        else {
+        if (rand.nextInt(2) == 0) {
+            return -1;
+        } else {
             return 1;
         }
     }
@@ -121,8 +122,6 @@ public class Animal implements Comparable<Animal>, WorldElement {
     }
 
 
-
-
     public Color getColorBasedOnEnergy() {
         if (this.energy < 20) {
             return Color.RED;      // Niska energia - czerwony
@@ -135,39 +134,35 @@ public class Animal implements Comparable<Animal>, WorldElement {
 
 
     public void move(WorldMap map) {
-        reduceEnergy(20);
+        reduceEnergy(20); // magiczna liczba?
         Vector2d potentialNewPosition = this.position.add(this.getDirection().toUnitVector());
 
         Boundary boundary = map.getCurrentBounds();
         int yPosition = potentialNewPosition.getY();
         int mapWidth = boundary.upperRight().getX();
         int potentialX = potentialNewPosition.getX();
-        if ( (yPosition == -1) || (yPosition > boundary.upperRight().getY())) {
+        if ((yPosition == -1) || (yPosition > boundary.upperRight().getY())) {
             this.turn(4);
-        }
-        else {
+        } else {
             if (potentialX > mapWidth) {
                 this.position = new Vector2d(0, yPosition);
                 this.turn(genome.get(currentGene));
-            }
-            else if(potentialX < 0) {
+            } else if (potentialX < 0) {
                 this.position = new Vector2d(mapWidth, yPosition);
                 this.turn(genome.get(currentGene));
-            }
-            else {
+            } else {
                 this.position = potentialNewPosition;
                 this.turn(genome.get(currentGene));
             }
         }
         if (isDead()) {
-            this.die();
-        }
-        else {
+            this.die(); // jeśli nie żyje, to niech zdechnie?
+        } else {
             daysLived += 1;
         }
     }
 
-    public Animal reproduceWithOtherAnimal(Animal animal) {
+    public Animal reproduceWithOtherAnimal(Animal animal) { // nie wygodniej by było zrobić metodę statyczną?
         ArrayList<Integer> childGenome = createChildGenome(this, animal);
         this.childrenCount++;
         this.energy -= energyToReproduce;
@@ -205,7 +200,7 @@ public class Animal implements Comparable<Animal>, WorldElement {
 
         // Apply mutations to some genes in the new genome
         int genomeSize = newGenome.size();
-        int numMutations = rand.nextInt(maxNumberOfMutations-minNumberOfMutations) + minNumberOfMutations;
+        int numMutations = rand.nextInt(maxNumberOfMutations - minNumberOfMutations) + minNumberOfMutations;
         for (int i = 0; i < numMutations; i++) {
             int geneIndex = rand.nextInt(genomeSize);
             int newGeneValue = rand.nextInt(maxGene + 1);
@@ -216,22 +211,25 @@ public class Animal implements Comparable<Animal>, WorldElement {
     }
 
 
-    public void turn(Integer turnCount){
+    public void turn(Integer turnCount) {
         this.direction = this.direction.turn(turnCount);
         currentGene++;
-        currentGene%=maxGene;
+        currentGene %= maxGene;
     }
 
-    public void addEnergy(int energy){
+    public void addEnergy(int energy) {
         this.energy += energy;
         plantsEaten += 1;
     }
-    public void reduceEnergy(int energy){
+
+    public void reduceEnergy(int energy) {
         this.energy -= energy;
     }
-    public Vector2d getPosition(){
+
+    public Vector2d getPosition() {
         return this.position;
     }
+
     public MapDirection getDirection() {
         return this.direction;
     }
@@ -239,19 +237,24 @@ public class Animal implements Comparable<Animal>, WorldElement {
     public void die() {
         this.dayOfDeath = this.daysLived;
     }
+
     public boolean isDead() {
         return (this.energy <= 0);
     }
+
     public boolean canReproduce() {
-        return energy > energyReadyToReproduce;  }
+        return energy > energyReadyToReproduce;
+    }
 
     public final List<Integer> getGenome() {
         return new ArrayList<>(this.genome);
     }
-    public int getEnergy(){
+
+    public int getEnergy() {
         return this.energy;
     }
-    public int getChildrenCount(){
+
+    public int getChildrenCount() {
         return this.childrenCount;
     }
 
@@ -259,13 +262,14 @@ public class Animal implements Comparable<Animal>, WorldElement {
         return this.daysLived;
     }
 
-    public int getPlantsEaten(){
+    public int getPlantsEaten() {
         return this.plantsEaten;
     }
 
-    public int getAge(){
+    public int getAge() {
         return this.daysLived;
     }
+
     @Override
     public int hashCode() {
         return (31 * getEnergy() * getAge());

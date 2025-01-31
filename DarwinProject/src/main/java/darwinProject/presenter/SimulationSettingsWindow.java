@@ -92,6 +92,7 @@ public class SimulationSettingsWindow {
             return null;
         }
     }
+
     @FXML
     private void onStartSimulation() {
         try {

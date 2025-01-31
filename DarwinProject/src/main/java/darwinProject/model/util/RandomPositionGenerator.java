@@ -28,12 +28,14 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
         this.grassCount = grassCount;
         generateGrassPositions(new ArrayList<>(positions));
     }
+
     public RandomPositionGenerator(List<Vector2d> preferredPositions, List<Vector2d> nonPreferredPositions, int grassCount) {
         this.grassCount = grassCount;
         int preferredSize = preferredPositions.size();
         int nonPreferredSize = nonPreferredPositions.size();
         generatePreferredAndNotPreferredPositions(new ArrayList<>(preferredPositions), new ArrayList<>(nonPreferredPositions), grassCount);
     }
+
     private void generateGrassPositions(List<Vector2d> availablePositions) {
         Collections.shuffle(availablePositions);
         for (int i = 0; i < Math.min(grassCount, availablePositions.size()); i++) {

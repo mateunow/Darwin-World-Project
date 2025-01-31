@@ -21,7 +21,7 @@ public class WaterMap extends AbstractWorldMap {
         this.width = width;
         this.height = height;
         //TODO CHECK IF NOT -1
-        this.numberOfWaterTiles = random.nextInt(height*width);
+        this.numberOfWaterTiles = random.nextInt(height * width);
         generateWaterTiles();
 
     }
@@ -33,6 +33,7 @@ public class WaterMap extends AbstractWorldMap {
             waterMap.put(waterPosition, new Water(waterPosition));
         }
     }
+
     @Override
     public void generateNewGrassPositions() {
         super.generateNewGrassPositions();
@@ -114,11 +115,11 @@ public class WaterMap extends AbstractWorldMap {
     }
 
 
-    public void spreadWater(Vector2d waterPosition) {
+    public void spreadWater(Vector2d waterPosition) { // public?
 
 //        TODO czy nie jest tak że da się to ładniej XD
         Vector2d[] directions = {
-                new Vector2d(0, 1),   // Góra
+                new Vector2d(0, 1),   // Góra // 5 nowych obiektów co wywołanie?
                 new Vector2d(0, -1),  // Dół
                 new Vector2d(-1, 0),  // Lewo
                 new Vector2d(1, 0)    // Prawo
@@ -127,40 +128,41 @@ public class WaterMap extends AbstractWorldMap {
             Vector2d newPosition = waterPosition.add(direction);
 
 
-                // Sprawdzamy, czy pole już nie ma wody
-                if (waterMap.containsKey(newPosition)) {
-                    continue;  // Jeśli już jest woda, przechodzimy do następnego kierunku
-                }
-
-                // Jeśli jest zwierzę na tym polu, zabijamy je
-                if (animals.containsKey(newPosition)) {
-                    animals.remove(newPosition); // Usuwamy zwierze
-                    // TODO co z tym kill?
-                    SortedSet<Animal> animalsToDelete = animals.get(newPosition);  // Ustalamy datę śmierci
-                    for (Animal animal : animalsToDelete) {
-                        animal.die();
-                        animals.remove(animal.getPosition());
-                        deadAnimals.add(animal);
-                    }
-                    notifyObservers("Animal died due to water at " + newPosition);
-                }
-               
+            // Sprawdzamy, czy pole już nie ma wody
+            if (waterMap.containsKey(newPosition)) {
+                continue;  // Jeśli już jest woda, przechodzimy do następnego kierunku
             }
 
-            // Jeśli jest trawa, usuwamy ją
-            if (grassMap.containsKey(newPosition)) {
-                grassMap.remove(newPosition);  // Trawa umiera
-                notifyObservers("Grass died due to water at " + newPosition);
+            // Jeśli jest zwierzę na tym polu, zabijamy je
+            if (animals.containsKey(newPosition)) {
+                animals.remove(newPosition); // Usuwamy zwierze
+                // TODO co z tym kill?
+                SortedSet<Animal> animalsToDelete = animals.get(newPosition);  // Ustalamy datę śmierci
+                for (Animal animal : animalsToDelete) {
+                    animal.die();
+                    animals.remove(animal.getPosition());
+                    deadAnimals.add(animal);
+                }
+                notifyObservers("Animal died due to water at " + newPosition);
             }
-
-            // Dodajemy wodę w tym miejscu
-            waterMap.put(newPosition, new Water(newPosition));
-            notifyObservers("Water spread to " + newPosition);
 
         }
+
+        // Jeśli jest trawa, usuwamy ją
+        if (grassMap.containsKey(newPosition)) {
+            grassMap.remove(newPosition);  // Trawa umiera
+            notifyObservers("Grass died due to water at " + newPosition);
+        }
+
+        // Dodajemy wodę w tym miejscu
+        waterMap.put(newPosition, new Water(newPosition));
+        notifyObservers("Water spread to " + newPosition);
+
     }
 
-    public void drySomeWater(int divisor) {
+}
+
+    public void drySomeWater(int divisor) { // public?
         // Tworzymy listę z aktualnymi pozycjami wody
         List<Vector2d> waterPositions = new ArrayList<>(waterMap.keySet());
 
@@ -184,7 +186,7 @@ public class WaterMap extends AbstractWorldMap {
     }
 
     public Map<Vector2d, Water> getWaterMap() {
-        return waterMap;
+        return waterMap; // dehermetyzacja
     }
 }
 

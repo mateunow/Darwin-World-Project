@@ -13,11 +13,11 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final MapVisualizer mapVisualizer = new MapVisualizer(this);
     protected final Map<Vector2d, SortedSet<Animal>> animals = new HashMap<>();
     protected Map<Vector2d, Grass> grassMap = new HashMap<>();
-    List<Animal> livingAnimals = new ArrayList<>();
+    List<Animal> livingAnimals = new ArrayList<>(); // modyfikator dostępu?
 
 
     protected final Vector2d upperRight;
-    protected final Vector2d lowerLeft = new Vector2d(0,0);
+    protected final Vector2d lowerLeft = new Vector2d(0, 0);
     private final Boundary finalBoundary;
     private final HashSet<MapChangeListener> observers = new HashSet<>();
     protected final int id = this.hashCode();
@@ -47,7 +47,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
 
 
-        this.upperRight = new Vector2d(width - 1,height - 1);
+        this.upperRight = new Vector2d(width - 1, height - 1);
         this.finalBoundary = new Boundary(lowerLeft, upperRight);
         this.numberOfPlantsGrownDaily = numberOfPlantsGrownDaily;
         this.energyFromEatingPlant = energyFromEatingPlant;
@@ -57,6 +57,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     public final void registerObservers(MapChangeListener observer) {
         observers.add(observer);
     }
+
     public final void unregisterObservers(MapChangeListener observer) {
         observers.remove(observer);
     }
@@ -68,7 +69,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
 
-
     public void generateNewGrassPositions() {
         RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(preferredFields, unpreferredFields, numberOfPlantsGrownDaily);
         for (Vector2d grassPosition : randomPositionGenerator) {
@@ -76,6 +76,7 @@ public abstract class AbstractWorldMap implements WorldMap {
             notifyObservers("New grass added");
         }
     }
+
     public void handleMovement() {
         for (Animal animal : livingAnimals) {
             this.move(animal);
@@ -90,12 +91,11 @@ public abstract class AbstractWorldMap implements WorldMap {
                 deadAnimals.add(animal);
                 deadAnimalsToRemove.add(animal);
 
-                }
             }
+        }
         livingAnimals.removeAll(deadAnimalsToRemove);
         notifyObservers("Living animals moved, dead ones removed");
     }
-
 
 
     public void handlePlantConsumption() {
@@ -140,8 +140,7 @@ public abstract class AbstractWorldMap implements WorldMap {
                         Animal child = parent1.reproduceWithOtherAnimal(parent2);
                         try {
                             placeAnimal(child, entry.getKey());
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) { // catch co?
                             System.out.println("Failed to place an animal: " + e.getMessage());
                         }
                     }
@@ -164,7 +163,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         return grouped;
     }
 
-    public abstract void move(Animal animal) ;
+    public abstract void move(Animal animal);
 
     protected Animal getStrongestAnimal(List<Animal> animals) {
         if (animals == null || animals.isEmpty()) {
@@ -178,12 +177,10 @@ public abstract class AbstractWorldMap implements WorldMap {
         if (canMoveTo(position)) {
             animals.computeIfAbsent(position, k -> new TreeSet<>()).add(animal);
             livingAnimals.add(animal);
-        }
-        else {
+        } else {
             throw new IncorrectPositionException(position);
         }
     }
-
 
 
     public abstract boolean canMoveTo(Vector2d position);
@@ -203,7 +200,6 @@ public abstract class AbstractWorldMap implements WorldMap {
             throw new IncorrectPositionException(position);
         }
     }
-
 
 
     public void eatPlants() {

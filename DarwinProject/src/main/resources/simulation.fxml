@@ -16,7 +16,7 @@
         </VBox>
     </top>
     <center>
-        <GridPane fx:id = "mapGrid" gridLinesVisible="true" alignment="CENTER"/>
+        <GridPane fx:id="mapGrid" gridLinesVisible="true" alignment="CENTER"/>
     </center>
 
 </BorderPane>

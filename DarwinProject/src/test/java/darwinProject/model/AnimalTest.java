@@ -22,7 +22,7 @@ class AnimalTest {
 
     @Test
     public void testTurn() {
-        Animal animal = new Animal(new Vector2d(2,2), 7, 50, 30, 20, 0, 3);
+        Animal animal = new Animal(new Vector2d(2, 2), 7, 50, 30, 20, 0, 3);
         MapDirection direction = animal.getDirection();
         System.out.println(animal + " " + direction);
         animal.turn(4);
@@ -38,8 +38,8 @@ class AnimalTest {
 
     @Test
     public void testReproduction() {
-        Animal animal = new Animal(new Vector2d(2,2), 7, 70, 30, 20, 0, 3);
-        Animal animal2 = new Animal(new Vector2d(2,2), 7, 50, 30, 20, 0, 3);
+        Animal animal = new Animal(new Vector2d(2, 2), 7, 70, 30, 20, 0, 3);
+        Animal animal2 = new Animal(new Vector2d(2, 2), 7, 50, 30, 20, 0, 3);
         System.out.println("First animal genome: " + animal.getGenome());
         System.out.println("Second animal genome: " + animal2.getGenome());
 
@@ -55,27 +55,26 @@ class AnimalTest {
 
     @Test
     public void testEnergyAfterReproduction() {
-        Animal animal = new Animal(new Vector2d(2,2), 7, 70, 30, 20, 0, 3);
-        Animal animal2 = new Animal(new Vector2d(2,2), 7, 50, 30, 20, 0, 3);
+        Animal animal = new Animal(new Vector2d(2, 2), 7, 70, 30, 20, 0, 3);
+        Animal animal2 = new Animal(new Vector2d(2, 2), 7, 50, 30, 20, 0, 3);
         System.out.println("First animal genome: " + animal.getGenome());
         System.out.println("Second animal genome: " + animal2.getGenome());
     }
 
     @Test
     public void eatGrassTestMultipleAnimals() {
-        Animal animal1 = new Animal(new Vector2d(1,1), 7, 50, 30, 20, 0, 3);
-        Animal animal2 = new Animal(new Vector2d(1,1), 7, 50, 30, 20, 0, 3);
-        Animal animal3 = new Animal(new Vector2d(1,1), 7, 50, 30, 20, 0, 3);
-        Animal animal4 = new Animal(new Vector2d(1,1), 7, 50, 30, 20, 0, 3);
-        EarthMap map = new EarthMap(2,2,4,1,20);
+        Animal animal1 = new Animal(new Vector2d(1, 1), 7, 50, 30, 20, 0, 3);
+        Animal animal2 = new Animal(new Vector2d(1, 1), 7, 50, 30, 20, 0, 3);
+        Animal animal3 = new Animal(new Vector2d(1, 1), 7, 50, 30, 20, 0, 3);
+        Animal animal4 = new Animal(new Vector2d(1, 1), 7, 50, 30, 20, 0, 3);
+        EarthMap map = new EarthMap(2, 2, 4, 1, 20);
         System.out.println(map);
         try {
             map.place(animal1);
             map.place(animal2);
             map.place(animal3);
             map.place(animal4);
-        }
-        catch (IncorrectPositionException e) {
+        } catch (IncorrectPositionException e) {
             System.out.println(e.getMessage());
         }
         System.out.println(map);

@@ -36,16 +36,18 @@ public class SimulationPresenter implements MapChangeListener {
     private int xMin, yMin, xMax, yMax, mapWidth, mapHeight;
     private int cellWidth = 50;
     private int cellHeight = 50;
+
     public void setWorldMap(WorldMap map) {
         this.map = map;
         map.registerObservers(this);
         drawMap();
     }
-    public void startSimulation(){
+
+    public void startSimulation() {
         // Create a new thread to run the simulation
         new Thread(() -> {
             int i = 0;
-            while(true) {
+            while (true) {
                 // Run the simulation logic
                 System.out.println("day " + i);
                 i++;
@@ -64,7 +66,7 @@ public class SimulationPresenter implements MapChangeListener {
                 });
 
                 try {
-                  
+
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -73,7 +75,6 @@ public class SimulationPresenter implements MapChangeListener {
         }).start();
     }
 
-    
 
     public void updateBounds() {
         Boundary boundary = map.getCurrentBounds();
@@ -139,15 +140,13 @@ public class SimulationPresenter implements MapChangeListener {
                         label = new Label(" ");
                     }
                     mapGrid.add(label, finalI - xMin + 1, yMax - finalJ + 1);
-                    mapGrid.setHalignment(label, HPos.CENTER); 
+                    mapGrid.setHalignment(label, HPos.CENTER);
                 });
             }
         }
     }
 
 
-
-    
     private void drawMap() {
         updateBounds();
         columnsFunction();
