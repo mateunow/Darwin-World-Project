@@ -127,25 +127,24 @@ public class WaterMap extends AbstractWorldMap {
             Vector2d newPosition = waterPosition.add(direction);
 
 
-                // Sprawdzamy, czy pole już nie ma wody
-                if (waterMap.containsKey(newPosition)) {
-                    continue;  // Jeśli już jest woda, przechodzimy do następnego kierunku
-                }
-
-                // Jeśli jest zwierzę na tym polu, zabijamy je
-                if (animals.containsKey(newPosition)) {
-                    animals.remove(newPosition); // Usuwamy zwierze
-                    // TODO co z tym kill?
-                    SortedSet<Animal> animalsToDelete = animals.get(newPosition);  // Ustalamy datę śmierci
-                    for (Animal animal : animalsToDelete) {
-                        animal.die();
-                        animals.remove(animal.getPosition());
-                        deadAnimals.add(animal);
-                    }
-                    notifyObservers("Animal died due to water at " + newPosition);
-                }
-               
+            // Sprawdzamy, czy pole już nie ma wody
+            if (waterMap.containsKey(newPosition)) {
+                continue;  // Jeśli już jest woda, przechodzimy do następnego kierunku
             }
+
+            // Jeśli jest zwierzę na tym polu, zabijamy je
+            if (animals.containsKey(newPosition)) {
+                animals.remove(newPosition); // Usuwamy zwierze
+                // TODO co z tym kill?
+                SortedSet<Animal> animalsToDelete = animals.get(newPosition);  // Ustalamy datę śmierci
+                for (Animal animal : animalsToDelete) {
+                    animal.die();
+                    animals.remove(animal.getPosition());
+                    deadAnimals.add(animal);
+                }
+                notifyObservers("Animal died due to water at " + newPosition);
+            }
+
 
             // Jeśli jest trawa, usuwamy ją
             if (grassMap.containsKey(newPosition)) {

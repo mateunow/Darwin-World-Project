@@ -1,17 +1,30 @@
 package darwinProject.presenter;
 
+import darwinProject.enums.AnimalType;
+import darwinProject.enums.MapType;
 import darwinProject.model.Vector2d;
+import darwinProject.model.maps.AbstractWorldMap;
+import darwinProject.model.maps.EarthMap;
 import darwinProject.model.maps.MapChangeListener;
 import darwinProject.model.maps.WorldMap;
 import darwinProject.model.util.Boundary;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
 import darwinProject.Simulation;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class SimulationPresenter implements MapChangeListener {
 
@@ -25,14 +38,6 @@ public class SimulationPresenter implements MapChangeListener {
     private Label moveDescriptionLabel;
 
 
-    private int xMin;
-    private int yMin;
-    private int xMax;
-    private int yMax;
-    private int mapWidth;
-    private int mapHeight;
-
-    private WorldMap map;
     private int xMin, yMin, xMax, yMax, mapWidth, mapHeight;
     private int cellWidth = 50;
     private int cellHeight = 50;
@@ -41,38 +46,6 @@ public class SimulationPresenter implements MapChangeListener {
         map.registerObservers(this);
         drawMap();
     }
-    public void startSimulation(){
-        // Create a new thread to run the simulation
-        new Thread(() -> {
-            int i = 0;
-            while(true) {
-                // Run the simulation logic
-                System.out.println("day " + i);
-                i++;
-
-                // Update world
-                simulation.getWorldMap().handleMovement();
-                simulation.getWorldMap().eatPlants();
-                simulation.getWorldMap().handlePlantConsumption();
-                simulation.getWorldMap().handleReproduction();
-                simulation.getWorldMap().generateNewGrassPositions();
-
-                // Update the UI
-                int finalI = i;
-                Platform.runLater(() -> {
-                    mapChanged(simulation.getWorldMap(), "Day " + finalI);
-                });
-
-                try {
-                  
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
     
 
     public void updateBounds() {
@@ -199,9 +172,6 @@ public class SimulationPresenter implements MapChangeListener {
 
     // Uruchomienie nowego okna symulacji
     public void startSimulation() {
-        String moveList = moveListTextField.getText();
-        List<Vector2d> positions = List.of(new Vector2d(1, 2), new Vector2d(3, 4));
-
         // Tworzymy nowe okno
         Stage newStage = new Stage();
         newStage.setTitle("Simulation Window");
@@ -218,9 +188,9 @@ public class SimulationPresenter implements MapChangeListener {
             newPresenter.setWorldMap(map);
 
             // Tworzymy i uruchamiamy symulację
-            Simulation simulation = new Simulation(100, 100, 20, 20, 5, 5, 50, 20, 0, 3, 7, 50, newPresenter);
+            Simulation simulation = new Simulation(100, 100, 20, 20, 5, 5, 50, 20, 0, 3, 7, 50, AnimalType.Animal, MapType.EarthMap);
             SimulationEngine engine = new SimulationEngine(List.of(simulation));
-            newPresenter.moveDescriptionLabel.setText("Simulation started with moves: " + moveList);
+            newPresenter.moveDescriptionLabel.setText("Simulation started");
 
             new Thread(engine::runSync).start();
 

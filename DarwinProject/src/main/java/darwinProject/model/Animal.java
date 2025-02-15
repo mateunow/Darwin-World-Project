@@ -114,10 +114,10 @@ public class Animal implements Comparable<Animal>, WorldElement {
 
         };
 
-        Color color = getColorBasedOnEnergy(); // Pobieranie koloru na podstawie energii
+//        Color color = getColorBasedOnEnergy(); // Pobieranie koloru na podstawie energii
 
         // Jeśli chcesz, możesz po prostu dołączyć kolory do znaków, ale ostateczne rysowanie musi się odbywać w JavaFX
-        return directionSymbol;
+//        return directionSymbol;
     }
 
 
@@ -253,10 +253,6 @@ public class Animal implements Comparable<Animal>, WorldElement {
     }
     public int getChildrenCount(){
         return this.childrenCount;
-    }
-
-    public int getAge() {
-        return this.daysLived;
     }
 
     public int getPlantsEaten(){

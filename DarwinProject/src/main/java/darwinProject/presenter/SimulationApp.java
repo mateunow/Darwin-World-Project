@@ -1,6 +1,8 @@
 package darwinProject.presenter;
 
 import darwinProject.Simulation;
+import darwinProject.enums.AnimalType;
+import darwinProject.enums.MapType;
 import darwinProject.model.maps.AbstractWorldMap;
 import darwinProject.model.Animal;
 import darwinProject.model.Vector2d;
@@ -109,7 +111,7 @@ public class SimulationApp extends Application {
 
     private void startSimulation(AbstractWorldMap map, SimulationPresenter presenter) {
         // Tworzymy symulację
-        Simulation simulation = new Simulation(10, 10, 3, 2, 20, 20, 50, 30, 0, 3, 7, 50, presenter);
+        Simulation simulation = new Simulation(10, 10, 3, 2, 20, 20, 50, 30, 0, 3, 7, 50, AnimalType.Animal, MapType.EarthMap);
         SimulationEngine engine = new SimulationEngine(List.of(simulation));
 
         // Uruchamiamy symulację asynchronicznie

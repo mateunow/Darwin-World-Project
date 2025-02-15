@@ -52,8 +52,6 @@ public class Simulation implements Runnable
     }
 
 
-    }
-
     public void run(){
 
         boolean running = true;
