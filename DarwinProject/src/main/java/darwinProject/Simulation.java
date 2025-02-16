@@ -25,8 +25,7 @@ public class Simulation implements Runnable
 
         if (mapType == MapType.EarthMap) {
             this.world = new EarthMap(mapHeight, mapWidth, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
-        }
-        else {
+        } else {
             this.world = new WaterMap(mapHeight, mapWidth, startingGrassCount, numberOfPlantsGrownDaily, energyFromEatingPlants);
         }
         Random random = new Random();
@@ -44,8 +43,7 @@ public class Simulation implements Runnable
                     Animal animal = new Animal(position, numberOfGenes, startingEnergy, energyReadyToReproduce, energyToReproduce, minNumberOfMutations, maxNumberOfMutations);
                     world.place(animal);
                 }
-            }
-            catch (IncorrectPositionException e) {
+            } catch (IncorrectPositionException e) {
                 System.out.println("Incorrect position " + e.getMessage());
             }
         }
